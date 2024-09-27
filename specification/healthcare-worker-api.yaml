@@ -54,7 +54,7 @@ info:
     * [Application-restricted RESTful APIs - API key authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-api-key-authentication)
 
     ## Environments and testing
-    | Environment       | Base URL                                                     
+    | Environment       | Base URL
     | ----------------- | ---------------------------------------------------------------------|
     | Sandbox           | `insert URL`                                                         |
     | Integration test  | `insert URL`                                                         |
