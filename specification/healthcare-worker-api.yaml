@@ -239,3 +239,4 @@ components:
           type: boolean
           description: A value of true indicates the person's care identity is active. A value of false indicates inactive.
           example: true
+          
