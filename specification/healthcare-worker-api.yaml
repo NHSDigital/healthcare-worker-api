@@ -10,12 +10,12 @@ info:
     - get basic professional details of any healthcare worker with a care identity, using their unique Care Identity ID.
 
     You cannot currently use this API to:
-    - search by professional codes, such as GMC or RNC code, or 
+    - search by professional codes, such as GMC or RNC code
 
     ## Who can use this API
     This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development.
 
-    You must do this before you can go live (see "Onboarding" below). 
+    You must do this before you can go live (see "Onboarding" below).
 
     ## API status and roadmap
     This API is [in alpha](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#statuses).
@@ -29,7 +29,7 @@ info:
 
     For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
 
-    ## Technology 
+    ## Technology
     This API is [RESTful](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#basic-rest).
 
     It conforms to the [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#fhir) global standard for health care data exchange, specifically to [FHIR R4 (v4.0.1)](https://hl7.org/fhir/r4/), except that it does not support the [capabilities](http://hl7.org/fhir/R4/http.html#capabilities) interaction.
@@ -46,15 +46,15 @@ info:
 
     For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
 
-    ## Security and authorisation 
+    ## Security and authorisation
     This API is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis), meaning we authenticate the calling application but not the end user.
 
     To use this API, use the following security pattern:
 
     * [Application-restricted RESTful APIs - API key authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-api-key-authentication)
 
-    ## Environments and testing 
-    | Environment       | Base URL                                                       
+    ## Environments and testing
+    | Environment       | Base URL                                                     
     | ----------------- | ---------------------------------------------------------------------|
     | Sandbox           | `insert URL`                                                         |
     | Integration test  | `insert URL`                                                         |
@@ -69,8 +69,8 @@ info:
 
     For more details on sandbox testing, or to try out the sandbox using our \"Try this API\" feature, see the documentation for each endpoint.
 
-    ### Integration testing 
-    Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing): 
+    ### Integration testing
+    Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing):
     - is for formal integration testing.
     - includes application authentication
 
@@ -160,7 +160,6 @@ paths:
                 properties:
                   person:
                     $ref: '#/components/schemas/Worker'
-                  
         '400':
           description: Missing or invalid query parameter(s).
         '404':
