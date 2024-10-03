@@ -10,4 +10,11 @@
 *.code-workspace
 !project.code-workspace
 
-# Please, add your custom content below!
+.idea
+.DS_Store
+
+dist
+venv
+__pycache__
+
+hcw-api.zip

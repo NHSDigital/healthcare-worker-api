@@ -1,112 +1,71 @@
-# Repository Template
+# Healthcare Worker API
 
-[![CI/CD Pull Request](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml/badge.svg)](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=repository-template&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=repository-template)
-
-Start with an overview or a brief description of what the project is about and what it does. For example -
-
-Welcome to our repository template designed to streamline your project setup! This robust template provides a reliable starting point for your new projects, covering an essential tech stack and encouraging best practices in documenting.
-
-This repository template aims to foster a user-friendly development environment by ensuring that every included file is concise and adequately self-documented. By adhering to this standard, we can promote increased clarity and maintainability throughout your project's lifecycle. Bundled within this template are resources that pave the way for seamless repository creation. Currently supported technologies are:
-
-- Terraform
-- Docker
-
-Make use of this repository template to expedite your project setup and enhance your productivity right from the get-go. Enjoy the advantage of having a well-structured, self-documented project that reduces overhead and increases focus on what truly matters - coding!
-
-## Table of Contents
-
-- [Repository Template](#repository-template)
-  - [Table of Contents](#table-of-contents)
-  - [Setup](#setup)
-    - [Prerequisites](#prerequisites)
-    - [Configuration](#configuration)
-  - [Usage](#usage)
-    - [Testing](#testing)
-  - [Design](#design)
-    - [Diagrams](#diagrams)
-    - [Modularity](#modularity)
-  - [Contributing](#contributing)
-  - [Contacts](#contacts)
-  - [Licence](#licence)
+The Healthcare Worker API is a Python app deployed to AWS.
 
 ## Setup
 
-By including preferably a one-liner or if necessary a set of clear CLI instructions we improve user experience. This should be a frictionless installation process that works on various operating systems (macOS, Linux, Windows WSL) and handles all the dependencies.
+Before performing any local development we need to perform some basic setup tasks.
 
-Clone the repository
+## Python
 
-```shell
-git clone https://github.com/nhs-england-tools/repository-template.git
-cd nhs-england-tools/repository-template
+This is a Python API with dependencies pulled in using poetry. In order to run locally you must have [python](https://www.python.org/downloads/)
+and [poetry](https://python-poetry.org/docs/) installed.
+
+PyCharm is the recommended IDE for this project. When setting up for the first time we need to configure the Python
+interpreter, which will also set up a virtual environment for our dependency installs. To set this up:
+1. Open one of the python files (under `src`) in PyCharm
+2. Click the "Configure Python Interpreter" link in the top of the window
+3. Select "Add New Interpreter" -> "Add Local Interpreter"
+4. Leave the directory as the default (should be `venv` within the root of the project)
+5. Ensure that the python version is set to at Python 3.10
+6. Check that the `venv` directory has been created and that the missing interpreter warning no longer displays
+
+If you want to install/run from a terminal you will need to activate the venv in that terminal. The command for this
+varies slightly based on OS.
+MacOS:
+```bash
+source venv/bin/activate
+```
+Windows:
+```bash
+.\venv\Scripts\activate.bat
 ```
 
-### Prerequisites
-
-The following software packages, or their equivalents, are expected to be installed and configured:
-
-- [Docker](https://www.docker.com/) container runtime or a compatible tool, e.g. [Podman](https://podman.io/),
-- [asdf](https://asdf-vm.com/) version manager,
-- [GNU make](https://www.gnu.org/software/make/) 3.82 or later,
-- [GNU coreutils](https://www.gnu.org/software/coreutils/) and [GNU binutils](https://www.gnu.org/software/binutils/) may be required to build dependencies like Python, which may need to be compiled during installation. For macOS users, this has been scripted and automated by the `dotfiles` project; please see this [script](https://github.com/nhs-england-tools/dotfiles/blob/main/assets/20-install-base-packages.macos.sh) for details,
-- [Python](https://www.python.org/) required to run Git hooks,
-- [`jq`](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor.
-
-> [!NOTE]<br>
-> The version of GNU make available by default on macOS is earlier than 3.82. You will need to upgrade it or certain `make` tasks will fail. On macOS, you will need [Homebrew](https://brew.sh/) installed, then to install `make`, like so:
->
-> ```shell
-> brew install make
-> ```
->
-> You will then see instructions to fix your `$PATH` variable to make the newly installed version available. If you are using [dotfiles](https://github.com/nhs-england-tools/dotfiles), this is all done for you.
-
-### Configuration
-
-Installation and configuration of the toolchain dependencies
-
-```shell
-make config
+Once you've switched to the venv you can install dependencies with:
+```bash
+poetry install
 ```
 
-## Usage
+We can run the application locally with the following command:
+```bash
+poetry run start
+```
 
-After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
+If you need to manually deploy your local app to an environment then you need to build it first. Run the `./scripts/build-app.sh` script
+from the root directory to generate the zip file that needs to be uploaded. Then run `./scripts/deploy-app.sh` to publish to app
+to the S3 artifact bucket.
 
-### Testing
+## Terraform
 
-There are `make` tasks for you to configure to run your tests.  Run `make test` to see how they work.  You should be able to use the same entry points for local development as in your CI pipeline.
+The `infrastructure` directory contains everything needed to define an HCW AWS environment. Generally these changes should
+be deployed out through our GitHub pipelines, but sometimes you may need to test / build / deploy locally. This section
+guides through how to do that.
 
-## Design
-
-### Diagrams
-
-The [C4 model](https://c4model.com/) is a simple and intuitive way to create software architecture diagrams that are clear, consistent, scalable and most importantly collaborative. This should result in documenting all the system interfaces, external dependencies and integration points.
-
-![Repository Template](./docs/diagrams/Repository_Template_GitHub_Generic.png)
-
-### Modularity
-
-Most of the projects are built with customisability and extendability in mind. At a minimum, this can be achieved by implementing service level configuration options and settings. The intention of this section is to show how this can be used. If the system processes data, you could mention here for example how the input is prepared for testing - anonymised, synthetic or live data.
-
-## Contributing
-
-Describe or link templates on how to raise an issue, feature request or make a contribution to the codebase. Reference the other documentation files, like
-
-- Environment setup for contribution, i.e. `CONTRIBUTING.md`
-- Coding standards, branching, linting, practices for development and testing
-- Release process, versioning, changelog
-- Backlog, board, roadmap, ways of working
-- High-level requirements, guiding principles, decision records, etc.
-
-## Contacts
-
-Provide a way to contact the owners of this project. It can be a team, an individual or information on the means of getting in touch via active communication channels, e.g. opening a GitHub discussion, raising an issue, etc.
-
-## Licence
-
-> The [LICENCE.md](./LICENCE.md) file will need to be updated with the correct year and owner
-
-Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
-
-Any HTML or Markdown documentation is [© Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/) and available under the terms of the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+1. Install the [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) if you haven't already
+2. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) if you haven't already
+3. Save your AWS credentials
+   1. Go to the [AWS account list](https://d-9c67018f89.awsapps.com/start/#/?tab=accounts) page in a browser
+   2. Select the environment you want to deploy to
+   3. Click on the "Access Keys" link
+   4. Copy the environment variables and paste into your terminal. This should have set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`.
+4. Go to the `instrastructure` directory
+5. Run `terraform init`. You should see a message including the message "Terraform has been successfully initialized!"
+6. Each AWS account can host multiple application environments (e.g. multiple dev environments in the dev account), but there are also some things that need to be common across the entire environment (e.g. IAM roles). To manage this we have different terraform workspaces. Any terraform plan / apply should be run within a workspace and the choice of workspace will depend on the change you want to deploy:
+   1. `mgmt` for anything that's common across all environments. Note that this change will affect all environments in the given account. This generally **not** what you want
+   2. Static env names like (e.g. `ft`, `int`) should be reserved for deployment from the pipelines
+   3. Anything else can be used to deploy a test environment. If running locally it's a good idea to have the workspace name include your name in some way.
+7. Switch to the terraform workspace you want with `terraform workspace select <workspace>`
+   1. If this is the first deployment to this workspace then you will need to run `terraform workspace new <workspace>` first
+8. Run `terraform plan -var-file=environments/dev.tfvars` to validate your changes and see what impact it will have if deployed
+   1. This is important. **Make sure the plan represents the change you want to make before running the apply command**
+9. If you're happy with the above plan, run `terraform apply -var-file=environments/dev.tfvars` to make the change in AWS
