@@ -13,5 +13,8 @@ logging = "^0.4.9.6"
 [tool.poetry.scripts]
 start = "main:local_start"
 
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
 [build-system]
 requires = ["poetry-core"]
