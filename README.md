@@ -52,7 +52,7 @@ guides through how to do that.
 5. Run `terraform init`. You should see a message including the message "Terraform has been successfully initialized!"
 6. Each AWS account can host multiple application environments (e.g. multiple dev environments in the dev account), but there are also some things that need to be common across the entire environment (e.g. IAM roles). To manage this we have different Terraform workspaces. Any Terraform plan / apply should be run within a workspace and the choice of workspace will depend on the change you want to deploy:
    1. `mgmt` for anything that's common across all environments. Note that this change will affect all environments in the given account. This generally **not** what you want
-   2. Static env names like (e.g. `ft`, `int`) should be reserved for deployment from the pipelines
+   2. Static environment names like (e.g. `ft`, `int`) should be reserved for deployment from the pipelines
    3. Anything else can be used to deploy a test environment. If running locally it's a good idea to have the workspace name include your name in some way.
 7. Switch to the Terraform workspace you want with `terraform workspace select <workspace>`
    1. If this is the first deployment to this workspace then you will need to run `terraform workspace new <workspace>` first

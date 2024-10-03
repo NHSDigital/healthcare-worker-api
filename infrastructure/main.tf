@@ -12,15 +12,15 @@ provider "aws" {
 }
 
 module "management" {
-  source = "./mgmt"
+  source  = "./mgmt"
   account = var.account
 
   count = terraform.workspace == "mgmt" ? 1 : 0
 }
 
 module "app" {
-  source = "./modules/hcw-api"
-  env = terraform.workspace
+  source  = "./modules/hcw-api"
+  env     = terraform.workspace
   account = var.account
 
   count = terraform.workspace != "mgmt" ? 1 : 0
