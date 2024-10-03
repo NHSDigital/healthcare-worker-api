@@ -9,19 +9,26 @@ terraform {
 
 provider "aws" {
   region = "eu-west-2"
+
+  default_tags {
+    tags = {
+      Environment = local.env
+      Account = var.account
+    }
+  }
 }
 
 module "management" {
   source  = "./mgmt"
   account = var.account
 
-  count = terraform.workspace == "mgmt" ? 1 : 0
+  count = local.env == "mgmt" ? 1 : 0
 }
 
 module "app" {
   source  = "./modules/hcw-api"
-  env     = terraform.workspace
+  env     = local.env
   account = var.account
 
-  count = terraform.workspace != "mgmt" ? 1 : 0
+  count = local.env != "mgmt" ? 1 : 0
 }

@@ -1,0 +1,9 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - poetry install
+  build:
+    commands:
+      - poetry build
