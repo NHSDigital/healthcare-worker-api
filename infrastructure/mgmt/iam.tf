@@ -24,12 +24,12 @@ resource "aws_iam_role_policy" "build_agent_policy" {
   role = aws_iam_role.build_agent_role.id
 
   policy = jsonencode({
-    Version   = "2012-10-17"
+    Version = "2012-10-17"
     Statement = [
       {
-        "Effect": "Allow",
-        "Action": "s3:PutObject",
-        "Resource": "*"
+        "Effect" : "Allow",
+        "Action" : "s3:PutObject",
+        "Resource" : "*"
       }
     ]
   })

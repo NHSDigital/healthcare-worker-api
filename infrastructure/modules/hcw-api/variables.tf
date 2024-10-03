@@ -1,5 +1,5 @@
 variable "env" {
-  type    = string
+  type = string
 }
 
 variable "account" {
@@ -7,6 +7,6 @@ variable "account" {
 }
 
 variable "s3_filename" {
-  type = string
+  type    = string
   default = "2024-10-03_071CDCCA-2F1C-4522-B7DA-C8DF8D39586B.zip"
 }

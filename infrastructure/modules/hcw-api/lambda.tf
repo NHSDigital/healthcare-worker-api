@@ -2,11 +2,11 @@ resource "aws_lambda_function" "hcw-app" {
   function_name = "hcw-app-${var.env}"
   role          = aws_iam_role.lambda-app-role.arn
 
-  runtime       = "python3.10"
+  runtime = "python3.10"
 
-  s3_bucket     = "nhse-iam-hcw-build-artifacts-${var.account}"
-  s3_key        = var.s3_filename
-  handler       = "main.lambda_handler"
+  s3_bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
+  s3_key    = var.s3_filename
+  handler   = "main.lambda_handler"
 }
 
 resource "aws_iam_role" "lambda-app-role" {
