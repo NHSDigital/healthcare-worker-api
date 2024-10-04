@@ -4,11 +4,11 @@ version = "0.0.1"
 authors = ["Ian Robinson <ian.robinson27@nhs.net>"]
 description = "Healthcare Worker API for fetching healthcare worker information"
 readme = "README.md"
-packages = [{include = "*", from="src"}]
+packages = [{include = "*/*", from="src"}, {include = "*", from="src"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-logging = "^0.4.9.6"
+boto3 = "^1.35.33"
 
 [tool.poetry.scripts]
 start = "main:local_start"

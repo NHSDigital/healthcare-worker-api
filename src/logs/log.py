@@ -1,6 +1,6 @@
 """
-Contains a log class to make logging easy and consistent. This ensures that the available logs are in cloudwatch (both
-debug and audit logs) and that the logs are available when running locally.
+Contains a log class to make logging easy and consistent. This ensures that the available logs are in cloudwatch
+and that the logs are available when running locally.
 """
 import logging
 import sys
@@ -8,7 +8,7 @@ import sys
 
 class Log:
     """
-    Class with basic logging functions for different severities. Also allows for specific audit logging.
+    Class with basic logging functions for different severities
     """
     # Need to send these logs somewhere useful (i.e. cloudwatch) under HCW-98
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
@@ -31,10 +31,3 @@ class Log:
         """
         self.logger.error(message)
         print(f"ERROR: {message}")
-
-    def audit(self, message: str):
-        """
-        Logs an audit message for recording user actions.
-        :param message: Message to be logged
-        """
-        raise NotImplementedError("Not implemented audit yet")

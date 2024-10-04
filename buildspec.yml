@@ -2,14 +2,11 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      python: 3.12
+#    runtime-versions:
+#      python: 3.12
     commands:
-      - python --version
-      - pip --version
-      - pip install --user pipx
-      - pipx install poetry
-      - poetry install
+      - make dependencies
+      - make build
   build:
     commands:
       - poetry build
