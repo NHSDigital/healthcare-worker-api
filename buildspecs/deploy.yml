@@ -13,6 +13,8 @@ phases:
       - yum -y install terraform
       - terraform --version
       - terraform init
+      - terraform workspace list
+      - # TODO: Check workspace exists first (-or-create)
       - terraform workspace select ${environment_name}
       - terraform plan -var-file="environments/${account_name}.tfvars" -out tf.plan
       - terraform apply tf.plan
