@@ -62,6 +62,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
   name     = "hcw-api-deployment"
   role_arn = aws_iam_role.app_deployment_pipeline_role.arn
   pipeline_type = "V2"
+  execution_mode = "PARALLEL"
 
   artifact_store {
     location = aws_s3_bucket.build_artifacts.bucket

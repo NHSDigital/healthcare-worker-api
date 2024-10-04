@@ -1,3 +1,8 @@
+data "aws_s3_object" "app_deployment_zip" {
+  bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
+  key = var.s3_filename
+}
+
 resource "aws_lambda_function" "hcw-app" {
   function_name = "hcw-app-${var.env}"
   role          = aws_iam_role.lambda-app-role.arn
@@ -7,6 +12,8 @@ resource "aws_lambda_function" "hcw-app" {
   s3_bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
   s3_key    = var.s3_filename
   handler   = "main.lambda_handler"
+
+  source_code_hash = data.aws_s3_object.app_deployment_zip.etag
 
   publish = true
 }
