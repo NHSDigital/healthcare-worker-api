@@ -104,7 +104,15 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
       configuration = {
         ProjectName = "hcw-api-build"
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "branch"
+            value = "#{variables.branch}"
+            type  = "PLAINTEXT"
+          }
+        ])
       }
+
     }
   }
 

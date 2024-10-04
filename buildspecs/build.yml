@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    branch: ""
+
 phases:
   install:
     runtime-versions:
@@ -13,6 +17,7 @@ phases:
       - source ~/.bashrc
   build:
     commands:
+      - git checkout ${branch}
       - make build
 
 artifacts:
