@@ -9,4 +9,5 @@ phases:
       - ls
       - git status
       - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
-      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name}
+      - s3 sync . s3://nhse-iam-hcw-build-artifacts-dev/${env_name}/
+      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions ${CODEBUILD_SOURCE_VERSION}
