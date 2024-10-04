@@ -15,7 +15,6 @@ build:
 	poetry install
 	poetry build
 	poetry run pip install --upgrade -t package dist/*.whl
-	cd package; zip -r ../hcw-api.zip . -x "*.pyc"
 
 publish: # Publish the project artefact @Pipeline
 	# TODO: Implement the artefact publishing step

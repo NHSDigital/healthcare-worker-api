@@ -59,7 +59,7 @@ resource "aws_codebuild_project" "hcw-api-build" {
     artifact_identifier = "hcw-api-app"
     location = "nhse-iam-hcw-build-artifacts-dev"
 
-    name = "hcw-api-build"
+    name = "hcw-api-build.zip"
     namespace_type = "BUILD_ID"
     packaging = "NONE"
   }
