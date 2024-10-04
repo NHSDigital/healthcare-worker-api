@@ -3,6 +3,9 @@ version: 0.2
 phases:
   install:
     commands:
+      - python --version
+      - pip --version
+      - pipx --version
       - poetry install
   build:
     commands:
