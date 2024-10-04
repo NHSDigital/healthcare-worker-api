@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    environment_name: "ianr_test"
+    environment_name: "ianr-test"
     account_name: "dev"
 
 phases:
