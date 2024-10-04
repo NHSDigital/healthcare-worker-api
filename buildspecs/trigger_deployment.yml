@@ -7,7 +7,8 @@ phases:
   build:
     commands:
       - # TODO: Find a way for something other than this default version which will obviously be the default branch!
-      - git checkout $CODEBUILD_SOURCE_VERSION
+      - git fetch origin pull/${pr_number}/head:pr
+      - git checkout pr
       - export commit_id=$(git rev-parse HEAD)
 #      - echo CODEBUILD_RESOLVED_SOURCE_VERSION=${CODEBUILD_RESOLVED_SOURCE_VERSION}
       - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
