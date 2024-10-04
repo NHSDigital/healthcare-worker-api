@@ -13,4 +13,4 @@ def greeting_message() -> str:
     :return: Greeting
     """
     logger.info(boto3.resource("s3"))
-    return "Even newer greeting this time"
+    return "Even newer greeting this time - test2"
