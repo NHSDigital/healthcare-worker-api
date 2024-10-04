@@ -13,4 +13,4 @@ def greeting_message() -> str:
     :return: Greeting
     """
     logger.info(boto3.resource("s3"))
-    return "Hello World! v3"
+    return "This is from a test branch, so not returning the standard hello world."
