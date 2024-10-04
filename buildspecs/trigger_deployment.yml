@@ -3,4 +3,4 @@ version: 0.2
 phases:
   build:
     commands:
-      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables "branch=${CODEBUILD_SOURCE_VERSION}"
+      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${CODEBUILD_SOURCE_VERSION}
