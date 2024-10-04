@@ -109,7 +109,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
   }
 
   stage {
-    name = "Deploy"
+    name = "PR-Deploy"
 
     action {
       name = "S3-Upload"

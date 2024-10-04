@@ -1,6 +1,10 @@
 version: 0.2
 
+env:
+  shell: bash
+
 phases:
   build:
     commands:
-      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${CODEBUILD_SOURCE_VERSION}
+      - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
+      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name}
