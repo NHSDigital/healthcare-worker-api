@@ -17,5 +17,6 @@ phases:
 
 artifacts:
   files:
-    package/**/*
+    - "**/*"
+  base-directory: package
   name: hcw-api-app
