@@ -19,7 +19,7 @@ resource "aws_lambda_function" "hcw-app" {
 }
 
 resource "aws_iam_role" "lambda-app-role" {
-  name = "lambda_app_role"
+  name = "lambda_app_role-${var.env}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

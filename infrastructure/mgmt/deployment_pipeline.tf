@@ -122,7 +122,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
       configuration = {
         BucketName = aws_s3_bucket.build_artifacts.bucket
-        ObjectKey = "latest-build.zip"
+        ObjectKey = "#{variables.branch}.zip"
         Extract = "false"
       }
     }
@@ -152,7 +152,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "latest-build.zip"
+            value = "#{variables.branch}.zip"
             type  = "PLAINTEXT"
           }
         ])
