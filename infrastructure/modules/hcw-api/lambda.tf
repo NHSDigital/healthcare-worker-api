@@ -7,6 +7,8 @@ resource "aws_lambda_function" "hcw-app" {
   s3_bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
   s3_key    = var.s3_filename
   handler   = "main.lambda_handler"
+
+  publish = true
 }
 
 resource "aws_iam_role" "lambda-app-role" {
@@ -24,4 +26,11 @@ resource "aws_iam_role" "lambda-app-role" {
       },
     ]
   })
+}
+
+resource "aws_lambda_alias" "live" {
+  name             = "live"
+  description      = "Currently live version for this environment"
+  function_name    = aws_lambda_function.hcw-app.arn
+  function_version = aws_lambda_function.hcw-app.version
 }
