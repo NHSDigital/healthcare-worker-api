@@ -8,5 +8,5 @@ variable "account" {
 
 variable "s3_filename" {
   type    = string
-  default = "0ceecdac-27e6-42d2-b2c8-378869942259/hcw-api-build"
+  default = "e5826ebf-1834-4a65-b875-2cc562f86668/hcw-api-build"
 }
