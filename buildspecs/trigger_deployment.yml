@@ -7,9 +7,10 @@ phases:
   build:
     commands:
       - # TODO: Find a way for something other than this default version which will obviously be the default branch!
+      - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
+      - export pr_number="${env_name/pr-/}"
       - git fetch origin pull/${pr_number}/head:pr
       - git checkout pr
       - export commit_id=$(git rev-parse HEAD)
 #      - echo CODEBUILD_RESOLVED_SOURCE_VERSION=${CODEBUILD_RESOLVED_SOURCE_VERSION}
-      - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
       - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}
