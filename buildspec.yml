@@ -9,6 +9,7 @@ phases:
       - pip --version
       - pip install pipx
       - python -m pipx install poetry
+      - python -m pipx ensurepath
       - make build
   build:
     commands:
