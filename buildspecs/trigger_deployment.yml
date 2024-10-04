@@ -7,4 +7,4 @@ phases:
   build:
     commands:
       - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
-      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions ${CODEBUILD_SOURCE_VERSION}
+      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions "actionName=Source,revisionType=COMMIT_ID,revisionValue=${CODEBUILD_SOURCE_VERSION}"
