@@ -12,15 +12,11 @@ phases:
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum -y install terraform
       - terraform --version
-      - cd infrastructure
-      - pwd
-      - terraform init
-      - terraform workspace list
-      - # TODO: Check workspace exists first (-or-create)
-      - terraform workspace select ${environment_name}
-      - terraform plan -var-file="environments/${account_name}.tfvars" -out tf.plan
-      - terraform apply tf.plan
   build:
     commands:
-      make
+      - cd infrastructure
+      - terraform init
+      - terraform workspace select -or-create ${environment_name}
+      - terraform plan -var-file="environments/${account_name}.tfvars" -out tf.plan
+      - terraform apply tf.plan
 

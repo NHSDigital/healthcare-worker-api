@@ -15,41 +15,15 @@ resource "aws_iam_role" "codebuild_deploy_job_role" {
   })
 }
 
-resource "aws_iam_policy" "codebuild_deploy_job_policy" {
-  name = "codebuild_deploy_job_policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        "Effect" : "Allow",
-        "Action" : ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
-        "Resource" : [
-          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-api-deploy:log-stream",
-          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-api-deploy:log-stream:*"
-        ]
-      },
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "codestar-connections:GetConnectionToken",
-          "codestar-connections:GetConnection",
-          "codeconnections:GetConnectionToken",
-          "codeconnections:GetConnection",
-          "codeconnections:UseConnection"
-        ],
-        "Resource" : [
-          "arn:aws:codestar-connections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972",
-          "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
-        ]
-      }
-    ]
-  })
+# The deployment job needs a lot of permissions because it's running terraform, which could be modifying lots of different resources
+# TODO: Think about if we want to be more restrictive, probably okay with restrictions on branch pushes
+data "aws_iam_policy" "power_user_policy" {
+  arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_iam_role_policy_attachment" "codebuild_deploy_job_attach_policy" {
   role       = aws_iam_role.codebuild_deploy_job_role.name
-  policy_arn = aws_iam_policy.codebuild_deploy_job_policy.arn
+  policy_arn = data.aws_iam_policy.power_user_policy.arn
 }
 
 resource "aws_codebuild_project" "hcw-api-deploy" {
