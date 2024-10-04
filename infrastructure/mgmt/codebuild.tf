@@ -15,6 +15,10 @@ resource "aws_iam_role" "codebuild_role" {
   })
 }
 
+data "aws_codestarconnections_connection" "github_connection" {
+  arn = "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
+}
+
 resource "aws_iam_policy" "codebuild_agent_policy" {
   name = "codebuild_agent_policy"
 
@@ -34,6 +38,7 @@ resource "aws_iam_policy" "codebuild_agent_policy" {
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-api-build:log-stream:*"
         ]
       },
+      # TODO: Is code connections still needed if triggered from code pipeline?
       {
         "Effect" : "Allow",
         "Action" : [
@@ -47,7 +52,15 @@ resource "aws_iam_policy" "codebuild_agent_policy" {
           "arn:aws:codestar-connections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972",
           "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
         ]
-      }
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : ["s3:GetObject"],
+        "Resource" : [
+          aws_s3_bucket.build_artifacts.arn,
+          "${aws_s3_bucket.build_artifacts.arn}/*"
+        ]
+      },
     ]
   })
 }

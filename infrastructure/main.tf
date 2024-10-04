@@ -7,11 +7,11 @@ terraform {
   }
 
   backend "s3" {
-    encrypt = true
-    bucket = "nhse-iam-hcw-terraform-state"
+    encrypt        = true
+    bucket         = "nhse-iam-hcw-terraform-state"
     dynamodb_table = "terraform-state-lock"
-    key = "terraform.tfstate"
-    region = "eu-west-2"
+    key            = "terraform.tfstate"
+    region         = "eu-west-2"
   }
 }
 
@@ -45,6 +45,8 @@ module "app" {
   source  = "./modules/hcw-api"
   env     = local.env
   account = var.account
+
+  s3_filename = var.app_s3_filename
 
   count = local.env != "mgmt" ? 1 : 0
 }
