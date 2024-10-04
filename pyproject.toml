@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "*/*", from="src"}, {include = "*", from="src"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 boto3 = "^1.35.33"
 
 [tool.poetry.scripts]

@@ -14,3 +14,8 @@ phases:
   build:
     commands:
       - make build
+
+artifacts:
+  files:
+    hcw-api.zip
+  name: hcw-api-app

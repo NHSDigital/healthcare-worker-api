@@ -54,7 +54,14 @@ resource "aws_codebuild_project" "hcw-api-build" {
   }
 
   artifacts {
-    type = "NO_ARTIFACTS"
+    type = "S3"
+
+    artifact_identifier = "hcw-api-app"
+    location = "nhse-iam-hcw-build-artifacts-dev"
+
+    name = "hcw-api-build"
+    namespace_type = "BUILD_ID"
+    packaging = "ZIP"
   }
 
   source {

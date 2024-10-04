@@ -18,7 +18,7 @@ interpreter, which will also set up a virtual environment for our dependency ins
 2. Click the "Configure Python Interpreter" link in the top of the window
 3. Select "Add New Interpreter" -> "Add Local Interpreter"
 4. Leave the directory as the default (should be `venv` within the root of the project)
-5. Ensure that the Python version is set to at Python 3.10
+5. Ensure that the Python version is set to at Python 3.12
 6. Check that the `venv` directory has been created and that the missing interpreter warning no longer displays
 
 If you want to install/run from a terminal you will need to activate the venv in that terminal. The command for this
