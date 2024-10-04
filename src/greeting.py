@@ -1,5 +1,5 @@
 """
-Just for testing out module imports
+Just for state out module imports
 """
 import boto3
 from logs.log import Log

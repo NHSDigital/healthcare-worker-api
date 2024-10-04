@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    environment_name: "ianr_test"
+    account_name: "dev"
+
 phases:
   install:
     commands:
@@ -7,4 +12,8 @@ phases:
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum -y install terraform
       - terraform --version
+      - terraform init
+      - terraform workspace select ${env.environment_name}
+      - terraform plan -var-file="environments/${account_name}.tfvars" -out tf.plan
+      - terraform apply tf.plan
 
