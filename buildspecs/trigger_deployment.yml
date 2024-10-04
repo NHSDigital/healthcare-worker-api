@@ -8,4 +8,4 @@ phases:
     commands:
       - echo CODEBUILD_RESOLVED_SOURCE_VERSION=${CODEBUILD_RESOLVED_SOURCE_VERSION}
       - export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
-      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=pr/2
+      - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${CODEBUILD_RESOLVED_SOURCE_VERSION}
