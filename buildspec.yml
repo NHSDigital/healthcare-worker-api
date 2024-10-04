@@ -7,8 +7,8 @@ phases:
     commands:
       - python --version
       - pip --version
-      - pip install --user pipx
-      - pipx install poetry
+      - pip install pipx
+      - python -m pipx install poetry
       - make build
   build:
     commands:
