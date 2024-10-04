@@ -61,7 +61,7 @@ resource "aws_codebuild_project" "hcw-api-build" {
 
     name = "hcw-api-build.zip"
     namespace_type = "BUILD_ID"
-    packaging = "ZIP"
+    packaging = "NONE"
   }
 
   source {
