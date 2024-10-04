@@ -2,9 +2,9 @@ version: 0.2
 
 env:
   variables:
-    environment_name: "ianr-test"
+    environment_name: ""
     account_name: "dev"
-    app_s3_filename: "c0130d95-d26d-4f26-9486-e2dd745e68a0/hcw-api-build.zip"
+    app_s3_filename: ""
 
 phases:
   install:

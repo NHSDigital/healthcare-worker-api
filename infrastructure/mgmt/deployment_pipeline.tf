@@ -128,7 +128,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     }
 
     action {
-      name     = "Deploy"
+      name     = "PR-Deploy"
       category = "Build"
       owner    = "AWS"
       provider = "CodeBuild"
@@ -142,7 +142,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
         EnvironmentVariables = jsonencode([
           {
             name  = "environment_name"
-            value = "ianr-test"
+            value = "#{variables.branch}"
             type  = "PLAINTEXT"
           },
           {
@@ -158,6 +158,10 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
         ])
       }
     }
+  }
+
+  variable {
+    name = "branch"
   }
 }
 
