@@ -10,6 +10,7 @@ phases:
       - pip install pipx
       - python -m pipx install poetry
       - python -m pipx ensurepath
+      - source ~/.bashrc
       - make build
   build:
     commands:
