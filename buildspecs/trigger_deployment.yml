@@ -2,4 +2,4 @@ version: 0.2
 
 phases:
   build:
-    aws codepipeline start-pipeline-execution --name hcw-api-deployment
+    - aws codepipeline start-pipeline-execution --name hcw-api-deployment
