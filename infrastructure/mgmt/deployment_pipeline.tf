@@ -172,3 +172,23 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     }
   }
 }
+
+resource "aws_codepipeline_webhook" "github_webhook" {
+  name = "gtihub_webhook"
+  authentication = "GITHUB_HMAC"
+  target_action = "Source"
+  target_pipeline = aws_codepipeline.app_deployment_pipeline.name
+
+  authentication_configuration {
+    secret_token = data.aws_secretsmanager_secret_version.github_webhook_secret.secret_string
+  }
+
+  filter {
+    json_path = "$.ref"
+    match_equals = "refs/heads/{Branch}"
+  }
+
+  lifecycle {
+    ignore_changes = [authentication_configuration]
+  }
+}
