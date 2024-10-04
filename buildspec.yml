@@ -5,7 +5,10 @@ phases:
 #    runtime-versions:
 #      python: 3.12
     commands:
-      - make dependencies
+      - python --version
+      - pip --version
+      - pip install --user pipx
+      - pipx install poetry
       - make build
   build:
     commands:
