@@ -59,9 +59,9 @@ resource "aws_iam_role_policy_attachment" "codepipeline_attach_policy" {
 }
 
 resource "aws_codepipeline" "app_deployment_pipeline" {
-  name     = "hcw-api-deployment"
-  role_arn = aws_iam_role.app_deployment_pipeline_role.arn
-  pipeline_type = "V2"
+  name           = "hcw-api-deployment"
+  role_arn       = aws_iam_role.app_deployment_pipeline_role.arn
+  pipeline_type  = "V2"
   execution_mode = "PARALLEL"
 
   artifact_store {
@@ -112,18 +112,18 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     name = "Deploy"
 
     action {
-      name = "S3-Upload"
+      name     = "S3-Upload"
       category = "Deploy"
-      owner = "AWS"
+      owner    = "AWS"
       provider = "S3"
-      version = "1"
+      version  = "1"
 
       input_artifacts = ["build_output"]
 
       configuration = {
         BucketName = aws_s3_bucket.build_artifacts.bucket
-        ObjectKey = "#{variables.branch}.zip"
-        Extract = "false"
+        ObjectKey  = "#{variables.branch}.zip"
+        Extract    = "false"
       }
     }
 
@@ -190,9 +190,9 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Effect": "Allow",
-        "Action": "codepipeline:StartPipelineExecution",
-        "Resource": aws_codepipeline.app_deployment_pipeline.arn
+        "Effect" : "Allow",
+        "Action" : "codepipeline:StartPipelineExecution",
+        "Resource" : aws_codepipeline.app_deployment_pipeline.arn
       }
     ]
   })

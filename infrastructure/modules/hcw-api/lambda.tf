@@ -1,6 +1,6 @@
 data "aws_s3_object" "app_deployment_zip" {
   bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
-  key = var.s3_filename
+  key    = var.s3_filename
 }
 
 resource "aws_lambda_function" "hcw-app" {
