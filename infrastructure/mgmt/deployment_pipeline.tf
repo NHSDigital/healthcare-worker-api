@@ -109,7 +109,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
   }
 
   stage {
-    name = "PR-Deploy"
+    name = "Deploy"
 
     action {
       name = "S3-Upload"
@@ -128,7 +128,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     }
 
     action {
-      name     = "PR-Deploy"
+      name     = "Deploy"
       category = "Build"
       owner    = "AWS"
       provider = "CodeBuild"
