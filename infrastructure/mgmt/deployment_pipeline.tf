@@ -164,10 +164,10 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     name = "Int-Deploy"
     action {
       category = "Approval"
-      name     = ""
-      owner    = ""
+      name     = "Int-Approval"
+      owner    = "AWS"
       provider = ""
-      version  = ""
+      version  = "1"
     }
 
     action {
@@ -207,10 +207,10 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     name = "Ref-Deploy"
     action {
       category = "Approval"
-      name     = ""
-      owner    = ""
+      name     = "Ref-Approval"
+      owner    = "AWS"
       provider = ""
-      version  = ""
+      version  = "1"
     }
 
     action {
