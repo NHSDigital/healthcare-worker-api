@@ -122,7 +122,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
       configuration = {
         BucketName = aws_s3_bucket.build_artifacts.bucket
-        ObjectKey  = "#{SourceVariables.CommitId}.zip"
+        ObjectKey  = "#{variables.commit_id}.zip"
         Extract    = "false"
       }
     }
@@ -152,7 +152,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{SourceVariables.CommitId}.zip"
+            value = "#{variables.commit_id}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -166,7 +166,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       category = "Approval"
       name     = "Int-Approval"
       owner    = "AWS"
-      provider = ""
+      provider = "Manual"
       version  = "1"
     }
 
@@ -195,7 +195,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{SourceVariables.CommitId}.zip"
+            value = "#{variables.commit_id}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -209,7 +209,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       category = "Approval"
       name     = "Ref-Approval"
       owner    = "AWS"
-      provider = ""
+      provider = "Manual"
       version  = "1"
     }
 
@@ -238,7 +238,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{SourceVariables.CommitId}.zip"
+            value = "#{variables.commit_id}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -248,6 +248,10 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
   variable {
     name = "branch"
+  }
+  variable {
+    name = "commit_id"
+    default_value = "#{SourceVariables.CommitId}"
   }
 }
 
