@@ -48,7 +48,7 @@ resource "aws_iam_policy" "fetch_build_artifacts" {
            "kms:Decrypt"
           ],
         "Resource": [
-           "arn:aws:kms:us-east-1:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
+           "arn:aws:kms:eu-west-2:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
           ]
       }
     ]
