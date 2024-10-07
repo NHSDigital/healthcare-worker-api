@@ -6,4 +6,4 @@ cd "$(git rev-parse --show-toplevel)"
 
 make dependencies
 make build
-pytest
+python -m pytest
