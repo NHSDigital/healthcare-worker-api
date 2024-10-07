@@ -48,6 +48,11 @@ resource "aws_iam_policy" "codepipeline_policy" {
           "arn:aws:codestar-connections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972",
           "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
         ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": "sts:AssumeRole",
+        "Resource": "arn:aws:iam::711387117641:role/CodeBuildDeployJobRole"
       }
     ]
   })
@@ -231,6 +236,11 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-static-env-trigger:log-stream",
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-static-env-trigger:log-stream:*"
         ]
+      },
+      {
+        "Effect": "Allow",
+        "Action": "s3:GetObject",
+        "Resource": "arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev/*"
       }
     ]
   })

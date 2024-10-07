@@ -11,6 +11,13 @@ resource "aws_iam_role" "codebuild_deploy_job_role" {
           Service = "codebuild.amazonaws.com"
         }
       },
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          AWS = "535002889321"
+        }
+      },
     ]
   })
 }

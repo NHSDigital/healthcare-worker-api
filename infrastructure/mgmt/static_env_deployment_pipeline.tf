@@ -80,6 +80,8 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
 
       input_artifacts = ["source_output"]
 
+      role_arn = "arn:aws:iam::711387117641:role/CodeBuildDeployJobRole"
+
       configuration = {
         ProjectName = "hcw-api-deploy"
 
@@ -126,6 +128,8 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
       version  = "1"
 
       input_artifacts = ["source_output"]
+
+      role_arn = "arn:aws:iam::711387117641:role/CodeBuildDeployJobRole"
 
       configuration = {
         ProjectName = "hcw-api-deploy"
