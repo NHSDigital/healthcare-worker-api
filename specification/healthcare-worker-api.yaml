@@ -166,8 +166,6 @@ paths:
           description: Invalid endpoint path
         '405':
           description: Unsupported HTTP method. For this endpoint only GET is available
-        '415':
-          description: Unsupported media type
         '500':
           description: Unhandled internal server error
         '502':
