@@ -7,7 +7,7 @@ phases:
   build:
     commands:
       - |
-        if expr "${CODEBUILD_SOURCE_VERSION}" : "pr-.*"  >/dev/null; then
+        if expr "${CODEBUILD_SOURCE_VERSION}" : "pr/.*"  >/dev/null; then
           # This is about a PR, so we need to specifically fetch the pull request commits from origin
 
           export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
