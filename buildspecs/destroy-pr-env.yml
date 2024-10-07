@@ -11,7 +11,7 @@ phases:
     commands:
       - cd infrastructure
       - |
-        if expr "${CODEBUILD_SOURCE_VERSION}": "pr-.*"  >/dev/null; then
+        if expr "${CODEBUILD_SOURCE_VERSION}" : "pr/.*"  >/dev/null; then
           export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
           terraform workspace select ${env_name}
           terraform destroy -var-file="environments/dev.tfvars" --auto-approve
