@@ -9,5 +9,10 @@ env:
 phases:
   build:
     commands:
-      - aws codepipeline start-pipeline-execution --name hcw-api-static-env-deployment --variables name=commit_id,value=${commit_id} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}
+      - |
+        if expr "${CODEBUILD_SOURCE_VERSION}" : "pr/.*"  >/dev/null; then
+          echo "Just a PR deployment, so we don't want to allow deployment to higher environments"
+        else
+          aws codepipeline start-pipeline-execution --name hcw-api-static-env-deployment --variables name=commit_id,value=${commit_id} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}
+        fi
 

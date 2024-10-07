@@ -6,7 +6,7 @@ The Healthcare Worker API is a Python app deployed to AWS.
 
 Before performing any local development we need to perform some basic setup tasks.
 
-## Python
+### Python
 
 This is a Python API with dependencies pulled in using poetry. In order to run locally you must have [Python](https://www.python.org/downloads/)
 and [poetry](https://python-poetry.org/docs/) installed.
@@ -35,7 +35,7 @@ If you need to manually deploy your local app to an environment then you need to
 from the root directory to generate the zip file that needs to be uploaded. Then run `./scripts/deploy-app.sh` to publish to app
 to the S3 artifact bucket.
 
-## Terraform
+### Terraform
 
 The `infrastructure` directory contains everything needed to define an HCW AWS environment. Generally these changes should
 be deployed out through our GitHub pipelines, but sometimes you may need to test / build / deploy locally. This section
@@ -51,7 +51,7 @@ guides through how to do that.
 4. Go to the `instrastructure` directory
 5. Run `terraform init`. You should see a message including the message "Terraform has been successfully initialized!"
 6. Each AWS account can host multiple application environments (e.g. multiple dev environments in the dev account), but there are also some things that need to be common across the entire environment (e.g. IAM roles). To manage this we have different Terraform workspaces. Any Terraform plan / apply should be run within a workspace and the choice of workspace will depend on the change you want to deploy:
-   1. `mgmt` for anything that's common across all environments. Note that this change will affect all environments in the given account. This generally **not** what you want
+   1. `mgmt` for anything that's common across all environments. Note that this change will affect all environments in the given account
    2. Static environment names like (e.g. `ft`, `int`) should be reserved for deployment from the pipelines
    3. Anything else can be used to deploy a test environment. If running locally it's a good idea to have the workspace name include your name in some way.
 7. Switch to the Terraform workspace you want with `terraform workspace select <workspace>`
@@ -59,3 +59,44 @@ guides through how to do that.
 8. Run `terraform plan -var-file=environments/dev.tfvars` to validate your changes and see what impact it will have if deployed
    1. This is important. **Make sure the plan represents the change you want to make before running the apply command**
 9. If you're happy with the above plan, run `terraform apply -var-file=environments/dev.tfvars` to make the change in AWS
+   1. If you're deploying to an app environment (i.e. not management) then you'll also need to specify location of the S3 lambda code in S3. For example, `-var "app_s3_filename=66374856c6c908c50e5d0974704b0e727106a934.zip"`. Since you need a valid zip file before deployments, it's almost always easier to let the update happen automatically through the PR.
+
+In the future we plan to put the "management" resources into their own AWS account - https://nhsd-jira.digital.nhs.uk/browse/HCW-100. For now, we have the `mgmt` workspace in dev which contains all the global resources and `mgmt-int` in int which contains build resources shared by int & ref.
+
+## Environments & Pipelines
+
+We have a number of dev environments and static environments for more formal testing. The following is our current environments, along with their AWS account and their general purpose:
+* Dev environments - dev - created automatically with each PR
+* FT - dev - created automatically from the latest code on the develop branch
+* Sand - int - for supplier testing with minimal barriers, designed to return a representative response but not a true integration
+* Int - int - for integration testing with suppliers
+* Ref - int - for formal release testing before deploying to production
+* Prod - prod - production environment
+
+### Development process
+
+#### PRs
+**All commits need to be signed** else the PR will be automatically rejected. See https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits for details.
+
+All work should be performed against a ticket in the HCW jira project. The changes should be made on a branch specific to that ticket.
+We don't have any formal branch naming conventions, but as a minimum the ticket number must be on the branch.
+There is no restriction of commit names on the branch, but all PRs must be squashed when merging.
+The squashed commit message should start with the jira ticket number and include a brief description of the change, (e.g. "HCW-76: Deployment Pipeline").
+
+Creating a PR will automatically trigger a few different processes. The PR itself shows the status of a number of checks performed on the code.
+This includes things like linting, terraform format checks and spelling checker. It also automatically triggers the
+deployment of the dev environment based on the PR. Note that there is currently no indication of the state of the deployment on the PR (see https://nhsd-jira.digital.nhs.uk/browse/HCW-101).
+
+You can check on the status of your build and deployment through the AWS console in the dev account (note that this may change to the management account under https://nhsd-jira.digital.nhs.uk/browse/HCW-100).
+The hcw-api-deployment pipeline will trigger within a minute of the PR creation (or new commit to an existing PR). The history page shows current and previous runs - https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/hcw-api-deployment/executions (you can use the "Source revisions" column to make sure you've found your build)
+
+Each pipeline starts with the "build" which performs a poetry build to generate the files that will deployed to the lambda. The S3-Upload action then zips and uploads the files to S3, this ensures that future deployments will be deploying exactly the same code.
+The "Deploy" action performs any relevant infrastructure changes, including updating the application lambda to the latest code. The dev environment is up to date once this step completes.
+
+*Note that not all of the terraform in the repo is applied at this stage. There are some resources which are common between environments, they are only updated once the PR is merged into develop. See above terraform section for more information.*
+
+#### Post Merge Process
+
+The same pipeline (hcw-api-deployment) is triggered for merges to develop, but it deploys to "FT" instead of a PR dev environment. Once the deployment is complete it also triggers the "hcw-api-static-env-deployment" job.
+The main difference is that this pipeline requires approval before every deployment, ensuring that we don't update a higher environment accidentally.
+The deployments happen in other environments, so you'll need to log into the int or prod AWS accounts to see their logs, but the pipeline will show if the job ran successfully or not.
