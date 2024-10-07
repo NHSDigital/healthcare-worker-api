@@ -24,4 +24,8 @@ phases:
 
           echo "Running on branch with commit id ${commit_id} and env_name ${env_name}"
         fi
+
+        if expr "${env_name}" : "develop-test" >/dev/null; then
+          export env_name="ft"
+        fi
       - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}

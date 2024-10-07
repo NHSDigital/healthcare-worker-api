@@ -21,8 +21,8 @@ phases:
       - terraform plan -var-file="environments/${account_name}.tfvars" -var "app_s3_filename=${app_s3_filename}" -out tf.plan
       - terraform apply tf.plan
       - |
-        if expr "${environment_name}" : "develop-test" >/dev/null; then
-          # Since we're deploying develop we want to make sure we deploy the mgmt infra too (we don't do this on
+        if expr "${environment_name}" : "ft" >/dev/null; then
+          # Since we're deploying to ft we want to make sure we deploy the mgmt infra too (we don't do this on
           # every branch otherwise it'll conflict)
           terraform workspace select mgmt
           terraform plan -var-file="environments/${account_name}.tfvars" -var "app_s3_filename=${app_s3_filename}" -out tf.plan

@@ -160,6 +160,92 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     }
   }
 
+  stage {
+    name = "Int-Deploy"
+    action {
+      category = "Approval"
+      name     = ""
+      owner    = ""
+      provider = ""
+      version  = ""
+    }
+
+    action {
+      name     = "Deploy"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
+
+      input_artifacts = ["source_output"]
+
+      configuration = {
+        ProjectName = "hcw-api-deploy"
+
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "environment_name"
+            value = "int"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "account_name"
+            value = "dev"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "app_s3_filename"
+            value = "#{SourceVariables.CommitId}.zip"
+            type  = "PLAINTEXT"
+          }
+        ])
+      }
+    }
+  }
+
+  stage {
+    name = "Ref-Deploy"
+    action {
+      category = "Approval"
+      name     = ""
+      owner    = ""
+      provider = ""
+      version  = ""
+    }
+
+    action {
+      name     = "Deploy"
+      category = "Build"
+      owner    = "AWS"
+      provider = "CodeBuild"
+      version  = "1"
+
+      input_artifacts = ["source_output"]
+
+      configuration = {
+        ProjectName = "hcw-api-deploy"
+
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "environment_name"
+            value = "ref"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "account_name"
+            value = "dev"
+            type  = "PLAINTEXT"
+          },
+          {
+            name  = "app_s3_filename"
+            value = "#{SourceVariables.CommitId}.zip"
+            type  = "PLAINTEXT"
+          }
+        ])
+      }
+    }
+  }
+
   variable {
     name = "branch"
   }
