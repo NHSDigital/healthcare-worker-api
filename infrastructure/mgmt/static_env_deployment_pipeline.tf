@@ -58,7 +58,7 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
   }
 
   stage {
-    name = "Int-Deploy"
+    name = "Int-Approval"
     action {
       category = "Approval"
       name     = "Int-Approval"
@@ -66,6 +66,10 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
       provider = "Manual"
       version  = "1"
     }
+  }
+
+  stage {
+    name = "Int-Deploy"
 
     action {
       name     = "Deploy"
@@ -101,7 +105,7 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
   }
 
   stage {
-    name = "Ref-Deploy"
+    name = "Ref-Approval"
     action {
       category = "Approval"
       name     = "Ref-Approval"
@@ -109,6 +113,10 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
       provider = "Manual"
       version  = "1"
     }
+  }
+
+  stage {
+    name = "Ref-Deploy"
 
     action {
       name     = "Deploy"

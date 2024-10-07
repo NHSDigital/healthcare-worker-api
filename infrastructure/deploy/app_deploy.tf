@@ -15,6 +15,26 @@ resource "aws_iam_role" "codebuild_deploy_job_role" {
   })
 }
 
+resource "aws_iam_policy" "fetch_build_artifacts" {
+  name = "fetch-build-artifacts"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" : "Allow",
+        "Action" : "s3:Get*",
+        "Resource" : ["arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev/*"]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : "s3:ListBucket",
+        "Resource" : ["arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev"]
+      }
+    ]
+  })
+}
+
 # The deployment job needs a lot of permissions because it's running terraform, which could be modifying lots of different resources
 # TODO: Think about if we want to be more restrictive, probably okay with restrictions on branch pushes
 data "aws_iam_policy" "power_user_policy" {
@@ -24,6 +44,11 @@ data "aws_iam_policy" "power_user_policy" {
 resource "aws_iam_role_policy_attachment" "codebuild_deploy_job_attach_policy" {
   role       = aws_iam_role.codebuild_deploy_job_role.name
   policy_arn = data.aws_iam_policy.power_user_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "build_artifacts_attach_policy" {
+  role       = aws_iam_role.codebuild_deploy_job_role.name
+  policy_arn = aws_iam_policy.fetch_build_artifacts.arn
 }
 
 resource "aws_codebuild_project" "hcw-api-deploy" {

@@ -41,6 +41,12 @@ module "management" {
   count = local.env == "mgmt" ? 1 : 0
 }
 
+module "deploy" {
+  source  = "./deploy"
+
+  count = length(regexall("mgmt*", local.env)) > 0 ? 1 : 0
+}
+
 module "app" {
   source  = "./modules/hcw-api"
   env     = local.env
@@ -48,5 +54,5 @@ module "app" {
 
   s3_filename = var.app_s3_filename
 
-  count = local.env != "mgmt" ? 1 : 0
+  count = length(regexall("mgmt*", local.env)) == 0 ? 1 : 0
 }

@@ -16,7 +16,7 @@ resource "aws_iam_role" "codebuild_role" {
 }
 
 data "aws_codestarconnections_connection" "github_connection" {
-  arn = "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
+  name = "Github"
 }
 
 resource "aws_iam_policy" "codebuild_agent_policy" {

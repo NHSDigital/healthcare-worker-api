@@ -1,5 +1,9 @@
+data "aws_s3_bucket" "app_deployment" {
+  bucket = "nhse-iam-hcw-build-artifacts-dev"
+}
+
 data "aws_s3_object" "app_deployment_zip" {
-  bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
+  bucket = data.aws_s3_bucket.app_deployment.id
   key    = var.s3_filename
 }
 
@@ -9,7 +13,7 @@ resource "aws_lambda_function" "hcw-app" {
 
   runtime = "python3.12"
 
-  s3_bucket = "nhse-iam-hcw-build-artifacts-${var.account}"
+  s3_bucket = data.aws_s3_bucket.app_deployment.id
   s3_key    = var.s3_filename
   handler   = "main.lambda_handler"
 

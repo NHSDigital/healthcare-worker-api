@@ -9,6 +9,6 @@ account=$1
 
 build_id="$(date '+%Y-%m-%d')_$(uuidgen)"
 
-aws s3 cp hcw-api.zip "s3://nhse-iam-hcw-build-artifacts-${account}/${build_id}.zip"
+aws s3 cp hcw-api.zip "s3://nhse-iam-hcw-build-artifacts-dev/${build_id}.zip"
 
 echo "Deployed artifact with name ${build_id}"

@@ -175,7 +175,15 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       input_artifacts  = ["source_output"]
 
       configuration = {
-        ProjectName = "hcw-api-build"
+        ProjectName = "hcw-deployment-static-env-trigger"
+
+        EnvironmentVariables = jsonencode([
+          {
+            name  = "commit_id"
+            value = "#{Source.CommitId}"
+            type  = "PLAINTEXT"
+          }
+        ])
       }
     }
   }
@@ -213,6 +221,16 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
         "Effect" : "Allow",
         "Action" : "codepipeline:StartPipelineExecution",
         "Resource" : [aws_codepipeline.app_deployment_pipeline.arn, aws_codepipeline.static_env_deployment_pipeline.arn]
+      },
+      {
+        "Effect": "Allow",
+        "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        "Resource": [
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-trigger:log-stream",
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-trigger:log-stream:*",
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-static-env-trigger:log-stream",
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-static-env-trigger:log-stream:*"
+        ]
       }
     ]
   })
