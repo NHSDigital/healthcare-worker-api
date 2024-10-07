@@ -97,7 +97,7 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
           },
           {
             name  = "account_name"
-            value = "dev"
+            value = "int"
             type  = "PLAINTEXT"
           },
           {
@@ -146,7 +146,7 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
           },
           {
             name  = "account_name"
-            value = "dev"
+            value = "int"
             type  = "PLAINTEXT"
           },
           {

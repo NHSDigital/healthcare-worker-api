@@ -50,9 +50,22 @@ resource "aws_iam_policy" "codepipeline_policy" {
         ]
       },
       {
-        "Effect": "Allow",
-        "Action": "sts:AssumeRole",
-        "Resource": "arn:aws:iam::711387117641:role/CodeBuildDeployJobRole"
+        "Effect" : "Allow",
+        "Action" : "sts:AssumeRole",
+        "Resource" : "arn:aws:iam::711387117641:role/CodeBuildDeployJobRole"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "kms:DescribeKey",
+          "kms:GenerateDataKey*",
+          "kms:Encrypt",
+          "kms:ReEncrypt*",
+          "kms:Decrypt"
+        ],
+        "Resource" : [
+          "arn:aws:kms:eu-west-2:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
+        ]
       }
     ]
   })
@@ -177,7 +190,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       provider = "CodeBuild"
       version  = "1"
 
-      input_artifacts  = ["source_output"]
+      input_artifacts = ["source_output"]
 
       configuration = {
         ProjectName = "hcw-deployment-static-env-trigger"
@@ -228,9 +241,9 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
         "Resource" : [aws_codepipeline.app_deployment_pipeline.arn, aws_codepipeline.static_env_deployment_pipeline.arn]
       },
       {
-        "Effect": "Allow",
-        "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
-        "Resource": [
+        "Effect" : "Allow",
+        "Action" : ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        "Resource" : [
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-trigger:log-stream",
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-trigger:log-stream:*",
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-deployment-static-env-trigger:log-stream",
@@ -238,9 +251,9 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
         ]
       },
       {
-        "Effect": "Allow",
-        "Action": "s3:GetObject",
-        "Resource": "arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev/*"
+        "Effect" : "Allow",
+        "Action" : "s3:GetObject",
+        "Resource" : "arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev/*"
       }
     ]
   })

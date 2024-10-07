@@ -42,7 +42,7 @@ module "management" {
 }
 
 module "deploy" {
-  source  = "./deploy"
+  source = "./deploy"
 
   count = length(regexall("mgmt*", local.env)) > 0 ? 1 : 0
 }

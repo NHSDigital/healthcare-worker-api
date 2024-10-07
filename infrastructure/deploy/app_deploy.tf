@@ -39,17 +39,17 @@ resource "aws_iam_policy" "fetch_build_artifacts" {
         "Resource" : ["arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev"]
       },
       {
-        "Effect": "Allow",
-        "Action": [
-           "kms:DescribeKey",
-           "kms:GenerateDataKey*",
-           "kms:Encrypt",
-           "kms:ReEncrypt*",
-           "kms:Decrypt"
-          ],
-        "Resource": [
-           "arn:aws:kms:eu-west-2:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
-          ]
+        "Effect" : "Allow",
+        "Action" : [
+          "kms:DescribeKey",
+          "kms:GenerateDataKey*",
+          "kms:Encrypt",
+          "kms:ReEncrypt*",
+          "kms:Decrypt"
+        ],
+        "Resource" : [
+          "arn:aws:kms:eu-west-2:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
+        ]
       }
     ]
   })
