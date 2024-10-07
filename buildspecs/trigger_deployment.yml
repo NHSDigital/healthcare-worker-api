@@ -9,14 +9,18 @@ phases:
       - |
         if expr "${CODEBUILD_SOURCE_VERSION}" : "pr-.*"  >/dev/null; then
           # This is about a PR, so we need to specifically fetch the pull request commits from origin
+
           export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
           export pr_number="${env_name/pr-/}"
+
           git fetch origin pull/${pr_number}/head:${env_name}
           git checkout ${env_name}
+
           export commit_id=$(git rev-parse HEAD)
+          echo "Running on PR with commit id ${commit_id} and env_name ${env_name}"
         else
           export commit_id=${CODEBUILD_SOURCE_VERSION}
-          export env_name=${CODEBUILD_WEBHOOK_HEAD_REF}
+          export env_name=${CODEBUILD_WEBHOOK_HEAD_REF/refs\/heads\//}
 
           echo "Running on branch with commit id ${commit_id} and env_name ${env_name}"
         fi
