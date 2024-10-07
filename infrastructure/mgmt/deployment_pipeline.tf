@@ -228,34 +228,3 @@ resource "aws_codebuild_project" "hcw-deployment-trigger" {
   }
 }
 
-resource "aws_codebuild_webhook" "deploy-webhook" {
-  project_name = aws_codebuild_project.hcw-deployment-trigger.name
-  build_type = "BUILD"
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED,PULL_REQUEST_REOPENED,RELEASED"
-    }
-  }
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PUSH"
-    }
-    filter {
-      type    = "HEAD_REF"
-      pattern = "develop-test"
-    }
-  }
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PUSH"
-    }
-    filter {
-      type    = "HEAD_REF"
-      pattern = "develop"
-    }
-  }
-}
-

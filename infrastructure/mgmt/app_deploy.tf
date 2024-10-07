@@ -76,14 +76,3 @@ resource "aws_codebuild_project" "hcw-api-destroy-pr-env" {
   }
 }
 
-resource "aws_codebuild_webhook" "destroy-pr-env-webhook" {
-  project_name = aws_codebuild_project.hcw-api-destroy-pr-env.name
-  build_type = "BUILD"
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PULL_REQUEST_CLOSED,PULL_REQUEST_MERGED"
-    }
-  }
-}
-
