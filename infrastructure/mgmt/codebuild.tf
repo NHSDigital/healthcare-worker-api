@@ -1,3 +1,7 @@
+data "aws_codestarconnections_connection" "github_connection" {
+  name = "Github"
+}
+
 resource "aws_iam_role" "codebuild_role" {
   name = "CodeBuildRole"
 
@@ -13,10 +17,6 @@ resource "aws_iam_role" "codebuild_role" {
       },
     ]
   })
-}
-
-data "aws_codestarconnections_connection" "github_connection" {
-  name = "Github"
 }
 
 resource "aws_iam_policy" "codebuild_agent_policy" {
@@ -39,7 +39,6 @@ resource "aws_iam_policy" "codebuild_agent_policy" {
         ]
       },
       {
-        "Sid": "Allow deployment to fetch from build artifact S3 bucket if not already in the same account"
         "Effect" : "Allow",
         "Action" : ["s3:GetObject"],
         "Resource" : [

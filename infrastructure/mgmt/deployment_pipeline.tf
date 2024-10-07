@@ -102,7 +102,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       configuration = {
         ConnectionArn    = data.aws_codestarconnections_connection.github_connection.arn
         FullRepositoryId = "NHSDigital/healthcare-worker-api"
-        BranchName       = "hcw-76-initial-deployment-pipeline"
+        BranchName       = "develop"
       }
 
       namespace = "Source"
@@ -200,6 +200,11 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
             name  = "commit_id"
             value = "#{Source.CommitId}"
             type  = "PLAINTEXT"
+          },
+          {
+            name = "environment_name"
+            value = "#{variables.branch}"
+            type  = "PLAINTEXT"
           }
         ])
       }
@@ -211,7 +216,6 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
   }
 }
 
-# TODO: Figure out how to get a webhook directly into codepipeline working, for now using an intermediate codebuild job
 resource "aws_iam_role" "deployment_trigger_role" {
   name = "DeploymentTriggerRole"
 
@@ -259,7 +263,7 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "deployment_triggerattach_policy" {
+resource "aws_iam_role_policy_attachment" "deployment_trigger-attach_policy" {
   role       = aws_iam_role.deployment_trigger_role.name
   policy_arn = aws_iam_policy.deployment_trigger_policy.arn
 }

@@ -1,4 +1,3 @@
-
 resource "aws_codebuild_project" "hcw-deployment-static-env-trigger" {
   name         = "hcw-deployment-static-env-trigger"
   service_role = aws_iam_role.deployment_trigger_role.arn
@@ -54,7 +53,7 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
       configuration = {
         ConnectionArn    = data.aws_codestarconnections_connection.github_connection.arn
         FullRepositoryId = "NHSDigital/healthcare-worker-api"
-        BranchName       = "hcw-76-initial-deployment-pipeline"
+        BranchName       = "develop"
       }
 
       namespace = "Source"
