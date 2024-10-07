@@ -38,22 +38,8 @@ resource "aws_iam_policy" "codebuild_agent_policy" {
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-api-build:log-stream:*"
         ]
       },
-      # TODO: Is code connections still needed if triggered from code pipeline?
       {
-        "Effect" : "Allow",
-        "Action" : [
-          "codestar-connections:GetConnectionToken",
-          "codestar-connections:GetConnection",
-          "codeconnections:GetConnectionToken",
-          "codeconnections:GetConnection",
-          "codeconnections:UseConnection"
-        ],
-        "Resource" : [
-          "arn:aws:codestar-connections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972",
-          "arn:aws:codeconnections:eu-north-1:535002889321:connection/b2b799de-0712-4567-94de-bb69a361f972"
-        ]
-      },
-      {
+        "Sid": "Allow deployment to fetch from build artifact S3 bucket if not already in the same account"
         "Effect" : "Allow",
         "Action" : ["s3:GetObject"],
         "Resource" : [

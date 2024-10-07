@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hcw-api"
 version = "0.0.1"
-authors = ["Ian Robinson <ian.robinson27@nhs.net>"]
+authors = ["Ian Robinson <ian.robinson27@nhs.net>", "Sat Thakor <satyarajsinh.thakor1@nhs.net>"]
 description = "Healthcare Worker API for fetching healthcare worker information"
 readme = "README.md"
 packages = [{include = "*/*", from="src"}, {include = "*", from="src"}]

@@ -7,7 +7,7 @@
 *.tfstate
 *.tfstate.*
 
-# Crash log.py files
+# Crash log files
 crash.log
 crash.*.log
 

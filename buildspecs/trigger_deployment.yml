@@ -1,3 +1,6 @@
+# This is the entry point for all deployments. It's triggered on a webhook, either due to an update to a PR or
+# because of a push to the develop branch. It works out an appropriate environment name based on the source
+# (e.g. "pr-2" for a PR, "ft" for develop)
 version: 0.2
 
 env:
@@ -12,11 +15,9 @@ phases:
 
           export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
           export pr_number="${env_name/pr-/}"
-
           git fetch origin pull/${pr_number}/head:${env_name}
-          git checkout ${env_name}
 
-          export commit_id=$(git rev-parse HEAD)
+          export commit_id=$(git rev-parse ${env_name})
           echo "Running on PR with commit id ${commit_id} and env_name ${env_name}"
         else
           export commit_id=${CODEBUILD_SOURCE_VERSION}
@@ -25,7 +26,7 @@ phases:
           echo "Running on branch with commit id ${commit_id} and env_name ${env_name}"
         fi
 
-        if expr "${env_name}" : "develop-test" >/dev/null; then
+        if expr "${env_name}" : "develop" >/dev/null; then
           export env_name="ft"
         fi
       - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}

@@ -2,4 +2,4 @@ from greeting import greeting_message
 
 
 def test_greeting():
-    assert greeting_message() == "Debug int deployment!"
+    assert greeting_message() == "Hello World!"

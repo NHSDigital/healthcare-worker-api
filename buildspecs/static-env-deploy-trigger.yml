@@ -1,4 +1,4 @@
-# This is triggered at the end of a automated deployment. If we're on a PR it'll do nothing, if we're on develop
+# This is triggered at the end of an automated deployment. If we're on a PR it'll do nothing, if we're on develop
 # it'll start the static env pipeline (which waits for approval before deploying anything)
 version: 0.2
 

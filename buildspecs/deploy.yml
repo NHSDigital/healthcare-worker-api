@@ -1,5 +1,7 @@
 # This is triggered as part of the codepipeline pipelines to deploy a specific build to an environment. It takes in
 # the environment name and the s3 filename of the build zip for the lambda.
+# There is one instance of this job in every HCW AWS account, with it responsible for making changes any infrastructure
+# changes as required.
 version: 0.2
 
 env:

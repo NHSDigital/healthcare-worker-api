@@ -27,7 +27,7 @@ provider "aws" {
 }
 
 # TODO: Need to think of a cleverer way of doing this. We only want one over all the environments, so maybe we do
-# need a dedicated management account?
+# need a dedicated management account? - raised as https://nhsd-jira.digital.nhs.uk/browse/HCW-100
 module "terraform_state" {
   source = "./terraform_state"
 

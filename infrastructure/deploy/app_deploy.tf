@@ -56,7 +56,7 @@ resource "aws_iam_policy" "fetch_build_artifacts" {
 }
 
 # The deployment job needs a lot of permissions because it's running terraform, which could be modifying lots of different resources
-# TODO: Think about if we want to be more restrictive, probably okay with restrictions on branch pushes
+# TODO: Think about if we want to be more restrictive, probably okay with restrictions on branch pushes - raised as https://nhsd-jira.digital.nhs.uk/browse/HCW-103
 data "aws_iam_policy" "power_user_policy" {
   arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
