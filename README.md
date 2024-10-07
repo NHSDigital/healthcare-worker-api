@@ -61,11 +61,14 @@ guides through how to do that.
 9. If you're happy with the above plan, run `terraform apply -var-file=environments/dev.tfvars` to make the change in AWS
    1. If you're deploying to an app environment (i.e. not management) then you'll also need to specify location of the S3 lambda code in S3. For example, `-var "app_s3_filename=66374856c6c908c50e5d0974704b0e727106a934.zip"`. Since you need a valid zip file before deployments, it's almost always easier to let the update happen automatically through the PR.
 
-In the future we plan to put the "management" resources into their own AWS account - https://nhsd-jira.digital.nhs.uk/browse/HCW-100. For now, we have the `mgmt` workspace in dev which contains all the global resources and `mgmt-int` in int which contains build resources shared by int & ref.
+In the future we plan to put the "management" resources into their own AWS account - [HCW-100](https://nhsd-jira.digital.nhs.uk/browse/HCW-100). For now, we have the `mgmt` workspace in dev which contains all the global resources and `mgmt-int` in int which contains build resources shared by int & ref.
+
+A Terraform linter runs on each push to a PR, the command `terraform fmt -recursive` will resolve any simple formatting issues for fix that status failure.
 
 ## Environments & Pipelines
 
 We have a number of dev environments and static environments for more formal testing. The following is our current environments, along with their AWS account and their general purpose:
+
 * Dev environments - dev - created automatically with each PR
 * FT - dev - created automatically from the latest code on the develop branch
 * Sand - int - for supplier testing with minimal barriers, designed to return a representative response but not a true integration
@@ -76,7 +79,8 @@ We have a number of dev environments and static environments for more formal tes
 ### Development process
 
 #### PRs
-**All commits need to be signed** else the PR will be automatically rejected. See https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits for details.
+
+**All commits need to be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)** else the PR will be automatically rejected.
 
 All work should be performed against a ticket in the HCW jira project. The changes should be made on a branch specific to that ticket.
 We don't have any formal branch naming conventions, but as a minimum the ticket number must be on the branch.
@@ -84,16 +88,16 @@ There is no restriction of commit names on the branch, but all PRs must be squas
 The squashed commit message should start with the jira ticket number and include a brief description of the change, (e.g. "HCW-76: Deployment Pipeline").
 
 Creating a PR will automatically trigger a few different processes. The PR itself shows the status of a number of checks performed on the code.
-This includes things like linting, terraform format checks and spelling checker. It also automatically triggers the
-deployment of the dev environment based on the PR. Note that there is currently no indication of the state of the deployment on the PR (see https://nhsd-jira.digital.nhs.uk/browse/HCW-101).
+This includes things like linting, Terraform format checks and spelling checker. It also automatically triggers the
+deployment of the dev environment based on the PR. Note that there is currently no indication of the state of the deployment on the PR (see [HCW-101](https://nhsd-jira.digital.nhs.uk/browse/HCW-101)).
 
-You can check on the status of your build and deployment through the AWS console in the dev account (note that this may change to the management account under https://nhsd-jira.digital.nhs.uk/browse/HCW-100).
-The hcw-api-deployment pipeline will trigger within a minute of the PR creation (or new commit to an existing PR). The history page shows current and previous runs - https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/hcw-api-deployment/executions (you can use the "Source revisions" column to make sure you've found your build)
+You can check on the status of your build and deployment through the AWS console in the dev account (note that this may change to the management account under [HCW-100](https://nhsd-jira.digital.nhs.uk/browse/HCW-100)).
+The hcw-api-deployment pipeline will trigger within a minute of the PR creation (or new commit to an existing PR). The history page shows current and previous runs - see [AWS pipeline execution history page](https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/hcw-api-deployment/executions) (you can use the "Source revisions" column to make sure you've found your build)
 
 Each pipeline starts with the "build" which performs a poetry build to generate the files that will deployed to the lambda. The S3-Upload action then zips and uploads the files to S3, this ensures that future deployments will be deploying exactly the same code.
 The "Deploy" action performs any relevant infrastructure changes, including updating the application lambda to the latest code. The dev environment is up to date once this step completes.
 
-*Note that not all of the terraform in the repo is applied at this stage. There are some resources which are common between environments, they are only updated once the PR is merged into develop. See above terraform section for more information.*
+*Note that not all of the Terraform in the repository is applied at this stage. There are some resources which are common between environments, they are only updated once the PR is merged into develop. See above Terraform section for more information.*
 
 #### Post Merge Process
 

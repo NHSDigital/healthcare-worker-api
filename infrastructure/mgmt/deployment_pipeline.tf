@@ -202,7 +202,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
             type  = "PLAINTEXT"
           },
           {
-            name = "environment_name"
+            name  = "environment_name"
             value = "#{variables.branch}"
             type  = "PLAINTEXT"
           }

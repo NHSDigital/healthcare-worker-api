@@ -17,4 +17,6 @@ toolchain
 [A-Z]+s
 venv
 dev
+Dev
+jira
 
