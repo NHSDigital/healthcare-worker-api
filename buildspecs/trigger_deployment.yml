@@ -29,5 +29,4 @@ phases:
         if expr "${env_name}" : "develop" >/dev/null; then
           export env_name="ft"
         fi
-        export env_name="ft"
       - aws codepipeline start-pipeline-execution --name hcw-api-deployment --variables name=branch,value=${env_name} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}
