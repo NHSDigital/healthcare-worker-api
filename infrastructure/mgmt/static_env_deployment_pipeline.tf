@@ -33,6 +33,10 @@ resource "aws_codepipeline" "static_env_deployment_pipeline" {
   artifact_store {
     location = aws_s3_bucket.build_artifacts.bucket
     type     = "S3"
+    encryption_key {
+      id   = "arn:aws:kms:us-east-1:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
+      type = "KMS"
+    }
   }
 
   stage {

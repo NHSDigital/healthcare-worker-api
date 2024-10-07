@@ -17,7 +17,7 @@ resource "aws_iam_role" "codebuild_deploy_job_role" {
         Principal = {
           AWS = "535002889321"
         }
-      },
+      }
     ]
   })
 }
@@ -37,6 +37,19 @@ resource "aws_iam_policy" "fetch_build_artifacts" {
         "Effect" : "Allow",
         "Action" : "s3:ListBucket",
         "Resource" : ["arn:aws:s3:::nhse-iam-hcw-build-artifacts-dev"]
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+           "kms:DescribeKey",
+           "kms:GenerateDataKey*",
+           "kms:Encrypt",
+           "kms:ReEncrypt*",
+           "kms:Decrypt"
+          ],
+        "Resource": [
+           "arn:aws:kms:us-east-1:535002889321:key/abd1c7ca-8423-4fc0-9b11-f9af494c2cac"
+          ]
       }
     ]
   })
