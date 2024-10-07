@@ -163,87 +163,19 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
   }
 
   stage {
-    name = "Int-Deploy"
-    action {
-      category = "Approval"
-      name     = "Int-Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
-    }
+    name = "Trigger-Static-Env-Deployment"
 
     action {
-      name     = "Deploy"
+      name     = "Trigger-Static-Env-Deployment"
       category = "Build"
       owner    = "AWS"
       provider = "CodeBuild"
       version  = "1"
 
-      input_artifacts = ["source_output"]
+      input_artifacts  = ["source_output"]
 
       configuration = {
-        ProjectName = "hcw-api-deploy"
-
-        EnvironmentVariables = jsonencode([
-          {
-            name  = "environment_name"
-            value = "int"
-            type  = "PLAINTEXT"
-          },
-          {
-            name  = "account_name"
-            value = "dev"
-            type  = "PLAINTEXT"
-          },
-          {
-            name  = "app_s3_filename"
-            value = "#{Source.CommitId}.zip"
-            type  = "PLAINTEXT"
-          }
-        ])
-      }
-    }
-  }
-
-  stage {
-    name = "Ref-Deploy"
-    action {
-      category = "Approval"
-      name     = "Ref-Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
-    }
-
-    action {
-      name     = "Deploy"
-      category = "Build"
-      owner    = "AWS"
-      provider = "CodeBuild"
-      version  = "1"
-
-      input_artifacts = ["source_output"]
-
-      configuration = {
-        ProjectName = "hcw-api-deploy"
-
-        EnvironmentVariables = jsonencode([
-          {
-            name  = "environment_name"
-            value = "ref"
-            type  = "PLAINTEXT"
-          },
-          {
-            name  = "account_name"
-            value = "dev"
-            type  = "PLAINTEXT"
-          },
-          {
-            name  = "app_s3_filename"
-            value = "#{Source.CommitId}.zip"
-            type  = "PLAINTEXT"
-          }
-        ])
+        ProjectName = "hcw-api-build"
       }
     }
   }
@@ -280,7 +212,7 @@ resource "aws_iam_policy" "deployment_trigger_policy" {
       {
         "Effect" : "Allow",
         "Action" : "codepipeline:StartPipelineExecution",
-        "Resource" : aws_codepipeline.app_deployment_pipeline.arn
+        "Resource" : [aws_codepipeline.app_deployment_pipeline.arn, aws_codepipeline.static_env_deployment_pipeline.arn]
       }
     ]
   })
