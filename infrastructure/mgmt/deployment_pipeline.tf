@@ -86,6 +86,8 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
         FullRepositoryId = "NHSDigital/healthcare-worker-api"
         BranchName       = "hcw-76-initial-deployment-pipeline"
       }
+
+      namespace = "Source"
     }
   }
 
@@ -122,7 +124,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
       configuration = {
         BucketName = aws_s3_bucket.build_artifacts.bucket
-        ObjectKey  = "#{variables.commit_id}.zip"
+        ObjectKey  = "#{Source.CommitId}.zip"
         Extract    = "false"
       }
     }
@@ -152,7 +154,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{variables.commit_id}.zip"
+            value = "#{Source.CommitId}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -195,7 +197,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{variables.commit_id}.zip"
+            value = "#{Source.CommitId}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -238,7 +240,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "app_s3_filename"
-            value = "#{variables.commit_id}.zip"
+            value = "#{Source.CommitId}.zip"
             type  = "PLAINTEXT"
           }
         ])
@@ -248,10 +250,6 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
   variable {
     name = "branch"
-  }
-  variable {
-    name = "commit_id"
-    default_value = "#{SourceVariables.CommitId}"
   }
 }
 
