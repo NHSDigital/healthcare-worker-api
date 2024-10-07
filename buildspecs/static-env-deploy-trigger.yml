@@ -1,0 +1,13 @@
+# This is triggered at the end of a automated deployment. If we're on a PR it'll do nothing, if we're on develop
+# it'll start the static env pipeline (which waits for approval before deploying anything)
+version: 0.2
+
+env:
+  variables:
+    commit_id: ""
+
+phases:
+  build:
+    commands:
+      - aws codepipeline start-pipeline-execution --name hcw-api-static-env-deployment --variables name=commit_id,value=${commit_id} --source-revisions actionName=Source,revisionType=COMMIT_ID,revisionValue=${commit_id}
+
