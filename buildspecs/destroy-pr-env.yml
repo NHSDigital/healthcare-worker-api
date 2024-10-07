@@ -13,6 +13,7 @@ phases:
       - |
         if expr "${CODEBUILD_SOURCE_VERSION}" : "pr/.*"  >/dev/null; then
           export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
+          terraform init
           terraform workspace select ${env_name}
           terraform destroy -var-file="environments/dev.tfvars" --auto-approve
         fi
