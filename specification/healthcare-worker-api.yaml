@@ -187,6 +187,10 @@ components:
           type: string
           description: The forename or given name of a person.
           example: Jane
+        middlenames:
+          type: string
+          description: The middle names of a person.
+          example: Alison
         surname:
           type: string
           description: That part of a person's name which is used to describe family, clan, tribal group, or marital association.
@@ -239,4 +243,3 @@ components:
           type: boolean
           description: A value of true indicates the person's care identity is active. A value of false indicates inactive.
           example: true
-          
