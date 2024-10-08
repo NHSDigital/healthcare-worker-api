@@ -18,7 +18,12 @@ def lambda_handler(event, context):
     logger.info(f"Received event: {event} and context: {context}")
     greeting = greeting_message()
     logger.info(greeting)
-    return "This is a test"
+    return {
+        "isBase64Encoded": False,
+        "statusCode": 200,
+        "headers": {},
+        "body": "This is the body"
+    }
 
 
 def local_start():
