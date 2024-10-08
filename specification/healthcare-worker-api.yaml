@@ -7,7 +7,7 @@ info:
     Use this API to access details of healthcare workers registered in the [Care Identity Service (CIS)](https://digital.nhs.uk/services/care-identity-service) directory.
 
     You can:
-    - get basic professional details of any healthcare worker with a care identity, using their unique Care Identity ID.
+    - get basic professional details of any healthcare worker with an active care identity, using their unique ID (this is sometimes known as SDS user ID or Smartcard ID).
 
     You cannot currently use this API to:
     - search by professional codes, such as GMC or RNC code
@@ -25,7 +25,7 @@ info:
     If you  have any other queries, [contact us](https://digital.nhs.uk/developer/help-and-support).
 
     ## Service level
-    This API is a *(insert service level)* service during private beta, meaning it is operational and supported only during business hours (8am to 6pm), Monday to Friday excluding bank holidays.
+    This API is a *(insert service level)* service during alpha, meaning it is operational and supported only during business hours (8am to 6pm), Monday to Friday excluding bank holidays.
 
     For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
 
@@ -90,8 +90,7 @@ info:
     ## Onboarding
     You need to get your software approved by us before it can go live with this API. We call this onboarding. The onboarding process can sometimes be quite long, so it's worth planning well ahead.
 
-    There is no separate onboarding process for the SDS FHIR API. Onboarding will be dictated by the current processes of the API that consumes the SDS FHIR API, for example GP Connect.
-    Once approval has been granted to use the API that utilises the SDS FHIR API then production access can be granted. To request production access, contact <ssd.nationalservicedesk@nhs.net>.
+    **_Describe onboarding process_**
 
     ## Errors
     We use standard HTTP status codes to show whether an API request succeeded or not. They are usually in the range:
@@ -117,12 +116,13 @@ paths:
         # Overview
         Use this endpoint to get details of healthcare workers in the CIS directory.
 
-        This endpoint should return the matching Person object from the directory, which provides the following information:
+        This endpoint will return the matching Person object from the directory, which provides the following information:
           * Name
           * Title
-          * Status (active/inactive)
           * Details of any organisations the worker is associated with
-          * Details of roles the worker holds at each organisation
+          * Details of [roles](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice/sds-role-groups) the worker holds at each organisation
+
+        Only active objects, showing current organisation and roles will be returned. If the care identity itself is closed, a 410 response will be returned (see below).
 
         To get the information, you must supply:
           * CIS unique identifier (sometimes known as SDS user ID or smartcard ID)
@@ -142,7 +142,7 @@ paths:
           schema:
             type: string
             format: uuid
-          required: false
+          required: true
           example: 6d3d3674-7ce5-11ec-90d6-0242ac120003
         - in: header
           name: apikey
@@ -166,12 +166,14 @@ paths:
           description: Invalid endpoint path
         '405':
           description: Unsupported HTTP method. For this endpoint only GET is available
+        '410':
+          description: Resource closed. The requested care identity profile is no longer active.
         '500':
           description: Unhandled internal server error
         '502':
-          description: Upstream LDAP returned an unsupported responses
+          description: Upstream system returned an unsupported response
         '504':
-          description: Upstream LDAP server request has timed out
+          description: Upstream server request has timed out
 components:
   schemas:
     Worker:
@@ -179,7 +181,7 @@ components:
       properties:
         id:
           type: string
-          description: Auto generated unique Spine ID for the person.
+          description: Auto generated unique ID for the person.
           example: 123456789012
         forename:
           type: string
@@ -209,16 +211,12 @@ components:
             properties:
               id:
                 type: string
-                description: Auto generated unique Spine ID for the organisational person.
+                description: Auto generated unique ID for the organisational person.
                 example: 345678901234
               dateOpened:
                 type: string
                 description: Date organisational person was opened/re-opened. (yyyymmdd)
                 example: 20210131
-              dateClosed:
-                type: string
-                description: Date organisational person was closed (yyyymmdd).
-                example: 20240927
               orgName:
                 type: string
                 description: Official name for the associated organisation, taken from ODS.
@@ -235,9 +233,13 @@ components:
                   properties:
                     id:
                       type: string
-                      description: Auto generated unique Spine ID for the role profile.
+                      description: Auto generated unique ID for the role profile.
                       example: 567890123456
-        active:
-          type: boolean
-          description: A value of true indicates the person's care identity is active. A value of false indicates inactive.
-          example: true
+                    roleName:
+                      type: string
+                      description: Name of the assigned role.
+                      example: General Medical Practitioner
+                    roleCode:
+                      type: string
+                      description: Code of the assigned role.
+                      example: R0260
