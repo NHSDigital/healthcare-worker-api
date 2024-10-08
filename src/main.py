@@ -16,7 +16,15 @@ def lambda_handler(event, context):
     :return:
     """
     logger.info(f"Received event: {event} and context: {context}")
-    logger.info(greeting_message())
+    greeting = greeting_message()
+    logger.info(greeting)
+    return {
+        "statusCode": 200,
+        "body": {"message": greeting},
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
 
 
 def local_start():

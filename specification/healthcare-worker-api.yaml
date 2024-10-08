@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   version: v0.1
-  title: Healthcare Worker API
+  title: Healthcare Worker API - PR 8
   description: |
     ## Overview
     Use this API to access details of healthcare workers registered in the [Care Identity Service (CIS)](https://digital.nhs.uk/services/care-identity-service) directory.
@@ -105,14 +105,29 @@ info:
     name: Spine Directory Service API Support
     url: https://digital.nhs.uk/developer/help-and-support
     email: api.management@nhs.net
+security:
+  - app-level3: []
 servers:
   - url: TBC sandbox URL
     description: Sandbox environment
+x-nhsd-apim:
+  monitoring: true
+  access:
+    - title: "Application Restricted"
+      grants:
+       app-level3: []
+  target:
+    type: external
+    healthcheck: /
+    url: https://www.google.com
+    security:
+      type: apikey
+      header: X-API-Key
+      secret: example-apikey-secret-name
 paths:
   /Worker:
     get:
       summary: Get healthcare worker details
-      operationId: getWorker
       description: |
         # Overview
         Use this endpoint to get details of healthcare workers in the CIS directory.
@@ -126,7 +141,6 @@ paths:
 
         To get the information, you must supply:
           * CIS unique identifier (sometimes known as SDS user ID or smartcard ID)
-
       parameters:
         - in: query
           name: identifier
@@ -175,6 +189,9 @@ paths:
         '504':
           description: Upstream LDAP server request has timed out
 components:
+  securitySchemes:
+    app-level3:
+      $ref: https://proxygen.prod.api.platform.nhs.uk/components/securitySchemes/app-level3
   schemas:
     Worker:
       type: object
@@ -239,4 +256,3 @@ components:
           type: boolean
           description: A value of true indicates the person's care identity is active. A value of false indicates inactive.
           example: true
-          
