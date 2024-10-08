@@ -3,6 +3,7 @@ Basic hello world app for an initial deployment
 """
 from greeting import greeting_message
 from logs.log import Log
+from src.generate import generate_jwt
 
 logger = Log("main")
 
@@ -19,10 +20,9 @@ def lambda_handler(event, context):
     greeting = greeting_message()
     logger.info(greeting)
     return {
-        "isBase64Encoded": False,
         "statusCode": 200,
-        "headers": {},
-        "body": "This is the body"
+        "headers": {"Content-Type": "application/json"},
+        "body": {"message": greeting}
     }
 
 

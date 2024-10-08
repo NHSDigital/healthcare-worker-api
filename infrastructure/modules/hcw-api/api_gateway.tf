@@ -71,6 +71,8 @@ resource "aws_apigatewayv2_stage" "api_gw_live_stage" {
   api_id = aws_apigatewayv2_api.app_api.id
   name   = "live"
 
+  auto_deploy = true
+
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
     format = jsonencode({
