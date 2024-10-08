@@ -18,13 +18,7 @@ def lambda_handler(event, context):
     logger.info(f"Received event: {event} and context: {context}")
     greeting = greeting_message()
     logger.info(greeting)
-    return {
-        "statusCode": 200,
-        "body": {"message": greeting},
-        "headers": {
-            "Content-Type": "application/json"
-        }
-    }
+    return "This is a test"
 
 
 def local_start():

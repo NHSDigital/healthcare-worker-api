@@ -115,7 +115,7 @@ x-nhsd-apim:
   access:
     - title: "Application Restricted"
       grants:
-       app-level3: []
+        app-level3: []
   target:
     type: external
     healthcheck: /

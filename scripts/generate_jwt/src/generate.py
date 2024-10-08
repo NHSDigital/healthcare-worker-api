@@ -29,7 +29,7 @@ def generate_jwt():
         private_key = f.read()
 
     client_assertion = jwt.encode(
-      claims, private_key, algorithm="RS512", headers={'kid': key_id}
+        claims, private_key, algorithm="RS512", headers={'kid': key_id}
     )
 
     token_response = requests.post(
