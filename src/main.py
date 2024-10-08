@@ -15,6 +15,7 @@ def lambda_handler(event, context):
     :param context: General context info for the lambda
     :return:
     """
+    logger.info(f"Received event: {event} and context: {context}")
     logger.info(greeting_message())
 
 
