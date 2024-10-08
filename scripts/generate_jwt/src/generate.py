@@ -43,4 +43,4 @@ def generate_jwt():
 
     response = token_response.json()
     access_token = response["access_token"]
-    print(f"Access token: ${access_token}")
+    print(f"Access token: {access_token}")
