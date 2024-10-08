@@ -119,7 +119,7 @@ x-nhsd-apim:
   target:
     type: external
     healthcheck: /
-    url: https://www.google.com
+    url: https://x9hvc31nql.execute-api.eu-west-2.amazonaws.com/live
     security:
       type: apikey
       header: X-API-Key

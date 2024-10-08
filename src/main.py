@@ -3,7 +3,6 @@ Basic hello world app for an initial deployment
 """
 from greeting import greeting_message
 from logs.log import Log
-from src.generate import generate_jwt
 
 logger = Log("main")
 
