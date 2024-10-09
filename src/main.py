@@ -1,8 +1,12 @@
 """
 Basic hello world app for an initial deployment
 """
+import json
+
 from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
+
+from hcw_exception import HcwException
 from logs.log import Log
 from request_handlers.handlers import handle_event
 
@@ -20,14 +24,24 @@ def lambda_handler(event_dict: dict, context: LambdaContext) -> dict:
     logger.save_event_details(event)
     logger.info(f"Received event: {event} and context: {context}")
 
-    response = handle_event(event.resource, event)
+    try:
+        response = handle_event(event.resource, event)
 
-    full_response = {
-        "isBase64Encoded": False,
-        "statusCode": 200,
-        "headers": {"Content-Type": "application/json"},
-        "body": response.to_json(),
-    }
+        full_response = {
+            "isBase64Encoded": False,
+            "statusCode": 200,
+            "headers": {"Content-Type": "application/json"},
+            "body": response.to_json(),
+        }
+    except HcwException as e:
+        logger.error(str(e))
+
+        full_response = {
+            "isBase64Encoded": False,
+            "statusCode": e.status_code,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"error": e.return_message})
+        }
 
     logger.info(f"Sending response of {full_response}")
     Log.cleanup()

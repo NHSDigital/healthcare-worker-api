@@ -16,7 +16,7 @@ handlers = {
 
 class UnknownHandler(HcwException):
     def __init__(self, endpoint):
-        super().__init__(f"There is no defined handler for the provided endpoint {endpoint}")
+        super().__init__(400, f"There is no defined handler for the provided endpoint {endpoint}")
 
 
 def handle_event(endpoint: str, event: APIGatewayProxyEvent) -> FhirWorker:

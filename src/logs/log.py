@@ -44,7 +44,6 @@ class Log:
         """
         log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.info(log_message)
-        print(f"From PRINT: {log_message}")
 
     def error(self, message: str):
         """
@@ -53,4 +52,3 @@ class Log:
         """
         log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.error(log_message)
-        print(f"From PRINT: {log_message}")
