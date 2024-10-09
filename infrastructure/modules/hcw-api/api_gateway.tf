@@ -20,14 +20,21 @@ resource "aws_iam_policy" "api_gateway_proxy_policy" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = "lambda:InvokeFunction"
-      Resource = [
-        aws_lambda_function.hcw-app.arn,
-        "${aws_lambda_function.hcw-app.arn}:*"
-      ]
-    }]
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = "lambda:InvokeFunction"
+        Resource = [
+          aws_lambda_function.hcw-app.arn,
+          "${aws_lambda_function.hcw-app.arn}:*"
+        ]
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+        "Resource" : "arn:aws:logs:*:*:*"
+      }
+    ]
   })
 }
 
