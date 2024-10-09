@@ -13,14 +13,12 @@ correlation_id = None
 
 
 class Log:
-    module_name: str
-
     """
     Class with basic logging functions for different severities
     """
     def __init__(self, module_name: str):
-        self.logger = logging.getLogger()
-        self.module_name = module_name
+        self.logger = logging.getLogger(module_name)
+        self.logger.setLevel(logging.INFO)
 
     @staticmethod
     def save_event_details(event: APIGatewayProxyEvent):
@@ -38,7 +36,6 @@ class Log:
         """
         global correlation_id
         correlation_id = None
-        logging.shutdown()
 
     def info(self, message: str):
         """
