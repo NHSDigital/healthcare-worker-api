@@ -2,6 +2,7 @@
 Basic hello world app for an initial deployment
 """
 from aws_lambda_powertools.utilities.typing import LambdaContext
+from event_type import ApiGatewayEvent
 from greeting import greeting_message
 from logs.log import Log
 
@@ -9,14 +10,14 @@ logger = Log("main")
 
 
 # pylint: disable=unused-argument
-def lambda_handler(event: dict, context: LambdaContext) -> dict:
+def lambda_handler(event: ApiGatewayEvent, context: LambdaContext) -> dict:
     """
     Lambda event handler
     :param event: Event info passed to the lambda for this execution
     :param context: General context info for the lambda
     :return:
     """
-    logger.save_correlation_id()
+    logger.save_event_details(event)
     logger.info(f"Received event: {event} and context: {context}")
     greeting = greeting_message()
     logger.info(greeting)
