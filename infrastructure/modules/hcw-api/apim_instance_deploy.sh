@@ -22,7 +22,7 @@ fi
 
 #Proxygen settings
 echo "About to set settings"
-proxygen credentials set username "" password ""
+proxygen credentials set username "placeholder" password "placeholder"
 echo "Set username and password"
 proxygen settings set api "healthcare-worker-api"
 echo "Set api"
