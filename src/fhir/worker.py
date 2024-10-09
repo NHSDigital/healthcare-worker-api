@@ -33,4 +33,4 @@ class FhirWorker(FhirObject):
     orgPersons: [OrgPerson]
 
     def to_json(self):
-        return json.dumps({"id": str(id)})
+        return json.dumps({"id": self.id})

@@ -28,7 +28,7 @@ class Log:
         :param event: Lambda event with details like correlation id
         """
         global correlation_id
-        correlation_id = event.headers.get("X-Correlation-ID", None)
+        correlation_id = event.resolved_headers_field.get("X-Correlation-ID", None)
 
     @staticmethod
     def cleanup():
