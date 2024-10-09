@@ -133,9 +133,9 @@ register in a similar way to how new users will onboard. Note that some of these
 
 With the above steps you have created a valid APIM app which will route requests to your PR. We can now start sending
 requests through to the HCW APIs. In order for these requests to be successful we need to authenticate with APIM using
-a signed JWT token. This repo includes a script for generating a valid auth jwt based on the above keypair.
+an access token. This repo includes a script for generating a valid access token based on the above keypair.
 
-1. Make sure that you have the private key at `scripts/generate_jwt/test-1.pem`. This file is not checked into git for security. It can be downloaded from AWS Secret Manager `internal-dev/request-key` secret.
+1. Make sure that you have the private key at `scripts/generate_access_tokengi/test-1.pem`. This file is not checked into git for security. It can be downloaded from AWS Secret Manager `internal-dev/request-key` secret.
 2. Change to the scripts directory: `cd scripts/generate_jwt`
 3. Install the poetry dependencies: `poetry install`
 4. Run the script with the following command, replacing `<api_key>` with the API key from your app: `poetry run start <api_key>`

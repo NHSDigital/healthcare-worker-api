@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "generate-jwt"
+name = "generate-access-token"
 version = "0.1.0"
 description = ""
 authors = ["Ian Robinson <ian.robinson27@nhs.net>"]
@@ -10,7 +10,7 @@ python = "^3.12"
 pyjwt = "^2.9.0"
 
 [tool.poetry.scripts]
-start = "src.generate:generate_jwt"
+start = "src.generate:generate_access_token"
 
 
 [build-system]

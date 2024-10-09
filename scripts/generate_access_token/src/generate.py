@@ -6,7 +6,7 @@ import uuid
 from time import time
 
 
-def generate_jwt():
+def generate_access_token():
     realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
 
     if len(sys.argv) != 2:
