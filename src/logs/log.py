@@ -4,7 +4,8 @@ and that the logs are available when running locally.
 """
 import logging
 import sys
-import uuid
+
+from event_type import ApiGatewayEvent
 
 # TODO: Something a bit cleverer, need to think about multiple requests
 correlation_id = None
@@ -21,13 +22,13 @@ class Log:
         self.logger = logging.getLogger(module_name)
 
     @staticmethod
-    def save_event_details(event):
+    def save_event_details(event: ApiGatewayEvent):
         """
         Saves the correlation id from the request so we can use it in future logging calls
         :param event: Lambda event with details like correlation id
         """
         global correlation_id
-        correlation_id = event.headers['X-Correlation-ID']
+        correlation_id = event.correlation_id
 
     def info(self, message: str):
         """

@@ -9,16 +9,18 @@ from logs.log import Log
 logger = Log("main")
 
 
-# pylint: disable=unused-argument
-def lambda_handler(event: ApiGatewayEvent, context: LambdaContext) -> dict:
+def lambda_handler(event_dict: dict, context: LambdaContext) -> dict:
     """
     Lambda event handler
-    :param event: Event info passed to the lambda for this execution
+    :param event_dict: Event info passed to the lambda for this execution
     :param context: General context info for the lambda
     :return:
     """
+    logger.info(f"Received event: {event_dict} and context: {context}")
+
+    event = ApiGatewayEvent(event_dict)
     logger.save_event_details(event)
-    logger.info(f"Received event: {event} and context: {context}")
+
     greeting = greeting_message()
     logger.info(greeting)
     return {
@@ -34,7 +36,7 @@ def local_start():
     This is just a helper function for triggering the lambda handler locally without having to provide the event
     and context objects
     """
-    lambda_handler(None, None)
+    lambda_handler({}, LambdaContext())
 
 
 if __name__ == '__main__':
