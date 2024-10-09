@@ -30,6 +30,14 @@ class Log:
         global correlation_id
         correlation_id = event.headers.get("X-Correlation-ID", None)
 
+    @staticmethod
+    def cleanup():
+        """
+        Called at the end of a request so that the log details from one request don't leak into another
+        """
+        global correlation_id
+        correlation_id = None
+
     def info(self, message: str):
         """
         General purpose info logging for information that could be useful in developer logs.

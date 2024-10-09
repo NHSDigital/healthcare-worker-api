@@ -14,10 +14,10 @@ def lambda_handler(event: APIGatewayProxyEvent, context: LambdaContext) -> dict:
     Lambda event handler
     :param event: Event info passed to the lambda for this execution
     :param context: General context info for the lambda
-    :return:
+    :return: The response to the API gateway, including response body it will forward on
     """
-    logger.info(f"Received event: {event} and context: {context}")
     logger.save_event_details(event)
+    logger.info(f"Received event: {event} and context: {context}")
 
     response = handle_event(event.resource, event)
 
@@ -29,6 +29,7 @@ def lambda_handler(event: APIGatewayProxyEvent, context: LambdaContext) -> dict:
     }
 
     logger.info(f"Sending response of {full_response}")
+    Log.cleanup()
     return full_response
 
 
