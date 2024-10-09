@@ -5,7 +5,7 @@ and that the logs are available when running locally.
 import logging
 import sys
 
-from event_type import ApiGatewayEvent
+from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
 
 # TODO: Something a bit cleverer, need to think about multiple requests
 correlation_id = None
@@ -22,28 +22,26 @@ class Log:
         self.logger = logging.getLogger(module_name)
 
     @staticmethod
-    def save_event_details(event: ApiGatewayEvent):
+    def save_event_details(event: APIGatewayProxyEvent):
         """
         Saves the correlation id from the request so we can use it in future logging calls
         :param event: Lambda event with details like correlation id
         """
         global correlation_id
-        correlation_id = event.correlation_id
+        correlation_id = event.headers.get("X-Correlation-ID", None)
 
     def info(self, message: str):
         """
         General purpose info logging for information that could be useful in developer logs.
         :param message: Message to be logged
         """
-        log_message = f"Correlation-ID: {correlation_id} {message}"
+        log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.info(log_message)
-        print(f"INFO: {log_message}")
 
     def error(self, message: str):
         """
         Logs an error message for tracking in developer logs and possibly alerting.
         :param message: Message to be logged
         """
-        log_message = f"Correlation-ID: {correlation_id} {message}"
+        log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.error(log_message)
-        print(f"ERROR: {log_message}")
