@@ -7,7 +7,6 @@ import sys
 
 from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
 
-# TODO: Something a bit cleverer, need to think about multiple requests
 correlation_id = None
 
 
@@ -45,6 +44,7 @@ class Log:
         """
         log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.info(log_message)
+        print(f"From PRINT: {log_message}")
 
     def error(self, message: str):
         """
@@ -53,3 +53,4 @@ class Log:
         """
         log_message = f"Correlation-ID: {correlation_id}, {message}"
         self.logger.error(log_message)
+        print(f"From PRINT: {log_message}")

@@ -9,13 +9,14 @@ from request_handlers.handlers import handle_event
 logger = Log("main")
 
 
-def lambda_handler(event: APIGatewayProxyEvent, context: LambdaContext) -> dict:
+def lambda_handler(event_dict: dict, context: LambdaContext) -> dict:
     """
     Lambda event handler
-    :param event: Event info passed to the lambda for this execution
+    :param event_dict: Event info passed to the lambda for this execution
     :param context: General context info for the lambda
     :return: The response to the API gateway, including response body it will forward on
     """
+    event = APIGatewayProxyEvent(event_dict)
     logger.save_event_details(event)
     logger.info(f"Received event: {event} and context: {context}")
 
