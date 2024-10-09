@@ -1,5 +1,5 @@
 resource "aws_iam_role" "api_gateway_proxy_role" {
-  name = "api-gateway-proxy-role"
+  name = "api-gateway-proxy-role-${var.env}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -16,7 +16,7 @@ resource "aws_iam_role" "api_gateway_proxy_role" {
 }
 
 resource "aws_iam_policy" "api_gateway_proxy_policy" {
-  name = "api-gateway-proxy-policy"
+  name = "api-gateway-proxy-policy-${var.env}"
 
   policy = jsonencode({
     Version = "2012-10-17"
