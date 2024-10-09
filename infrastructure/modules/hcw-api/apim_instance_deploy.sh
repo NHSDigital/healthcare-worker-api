@@ -21,14 +21,10 @@ else
 fi
 
 #Proxygen settings
-echo "About to set settings"
-proxygen credentials set username "placeholder" password "placeholder"
-echo "Set username and password"
+yes "" | proxygen credentials set username "placeholder" password "placeholder"
 proxygen settings set api "healthcare-worker-api"
-echo "Set api"
 proxygen settings set endpoint_url "https://proxygen.prod.api.platform.nhs.uk"
 proxygen settings set spec_output_format "yaml"
-echo "Set proxygen settings"
 
 # Get proxygen private key to allow for proxy instance deployment
 aws secretsmanager get-secret-value --secret-id "$apim_private_key_secret_arn" | jq -r ".SecretString" > ~/proxygen_private_key.pem
