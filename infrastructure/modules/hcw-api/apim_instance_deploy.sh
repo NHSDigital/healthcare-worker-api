@@ -21,18 +21,19 @@ else
 fi
 
 #Proxygen settings
-yes "" | proxygen credentials set username "placeholder" password "placeholder"
+yes "" | proxygen credentials set
 proxygen settings set api "healthcare-worker-api"
 proxygen settings set endpoint_url "https://proxygen.prod.api.platform.nhs.uk"
 proxygen settings set spec_output_format "yaml"
 
 # Get proxygen private key to allow for proxy instance deployment
-aws secretsmanager get-secret-value --secret-id "$apim_private_key_secret_arn" | jq -r ".SecretString" > ~/proxygen_private_key.pem
+aws secretsmanager get-secret-value --secret-id "$apim_private_key_secret_arn" | jq -r ".SecretString" > /tmp/proxygen_private_key.pem
 ls ~/proxygen_private_key.pem
-proxygen credentials set private_key_path ~/proxygen_private_key.pem key_id key-1 client_id healthcare-worker-api-client
+proxygen credentials set private_key_path /tmp/proxygen_private_key.pem key_id key-1 client_id healthcare-worker-api-client
 echo "Set service credentials"
 
 # Deploy proxygen instance
+cat ./temp_spec.yaml
+echo proxygen instance deploy --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}" ./temp_spec.yaml
 proxygen instance deploy --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}" ./temp_spec.yaml
-rm ~/proxygen_private_key.pem
 
