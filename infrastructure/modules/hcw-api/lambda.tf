@@ -39,7 +39,7 @@ resource "aws_iam_role" "lambda_app_role" {
         Principal = {
           Service = "lambda.amazonaws.com"
         }
-      },
+      }
     ]
   })
 }

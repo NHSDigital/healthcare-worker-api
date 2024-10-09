@@ -36,67 +36,47 @@ resource "aws_iam_role_policy_attachment" "api_gateway_proxy_policy_attach" {
   policy_arn = aws_iam_policy.api_gateway_proxy_policy.arn
 }
 
-resource "aws_apigatewayv2_api" "app_api" {
-  name          = "hcw-api-${var.env}"
-  protocol_type = "HTTP"
+resource "aws_api_gateway_rest_api" "app_api" {
+  name = "hcw-api-${var.env}"
 }
 
-resource "aws_apigatewayv2_route" "worker_endpoint" {
-  api_id    = aws_apigatewayv2_api.app_api.id
-  route_key = "GET /Worker"
-
-  target = "integrations/${aws_apigatewayv2_integration.api_lambda_integration.id}"
+resource "aws_api_gateway_resource" "worker" {
+  parent_id = aws_api_gateway_rest_api.app_api.root_resource_id
+  path_part = "Worker"
+  rest_api_id = aws_api_gateway_rest_api.app_api.id
 }
 
-resource "aws_apigatewayv2_integration" "api_lambda_integration" {
-  api_id           = aws_apigatewayv2_api.app_api.id
-  integration_type = "AWS_PROXY"
-  connection_type  = "INTERNET"
-  # TODO: Should this be internet or VPC_LINK?
-
-  integration_method     = "POST"
-  integration_uri        = aws_lambda_alias.live.invoke_arn
-  passthrough_behavior   = "WHEN_NO_MATCH"
-  payload_format_version = "2.0"
+resource "aws_api_gateway_method" "worker_get" {
+  authorization = "NONE"
+  http_method = "GET"
+  resource_id = aws_api_gateway_resource.worker.id
+  rest_api_id = aws_api_gateway_rest_api.app_api.id
 }
 
-resource "aws_apigatewayv2_vpc_link" "api_vpc_link" {
-  name = "api-vpc-link-${var.env}"
+resource "aws_api_gateway_integration" "worker_get_lambda_integration" {
+  http_method = aws_api_gateway_method.worker_get.http_method
+  resource_id = aws_api_gateway_resource.worker.id
+  rest_api_id = aws_api_gateway_rest_api.app_api.id
 
-  security_group_ids = [aws_security_group.app_security_group.id]
-  subnet_ids         = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
+  integration_http_method = "POST"
+  type = "AWS_PROXY"
+  uri = aws_lambda_alias.live.invoke_arn
 }
 
-resource "aws_apigatewayv2_stage" "api_gw_live_stage" {
-  api_id = aws_apigatewayv2_api.app_api.id
-  name   = "live"
-
-  auto_deploy = true
-
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn
-    format = jsonencode({
-      httpMethod     = "$content.httpMethod"
-      ip             = "$context.identity.sourceIp"
-      protocol       = "$context.protocol"
-      requestId      = "$context.requestId"
-      requestTime    = "$context.requestTime"
-      responseLength = "$context.responseLength"
-      routeKey       = "$context.routeKey"
-      status         = "$context.status"
-    })
-  }
+resource "aws_api_gateway_deployment" "live" {
+  rest_api_id = aws_api_gateway_rest_api.app_api.id
 }
 
-resource "aws_apigatewayv2_deployment" "api_deployment" {
-  api_id = aws_apigatewayv2_api.app_api.id
+resource "aws_lambda_permission" "apigw_lambda" {
+  statement_id        = "AllowExecutionFromAPIGateway"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.hcw-app.function_name
+  principal     = "apigateway.amazonaws.com"
 
-  lifecycle {
-    create_before_destroy = true
-  }
+  source_arn = "${aws_api_gateway_rest_api.app_api.execution_arn}/*/*/*"
+  qualifier = aws_lambda_alias.live.name
 }
 
 resource "aws_cloudwatch_log_group" "api_gateway_logs" {
   name = "gateway-logs-${var.env}"
-
 }

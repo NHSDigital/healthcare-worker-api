@@ -9,6 +9,6 @@ resource "terraform_data" "apim_instance_deploy" {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/apim_instance_deploy.sh ${var.env} ${var.apim_environment} ${data.aws_secretsmanager_secret.apim_account_private_key.arn} ${aws_apigatewayv2_stage.api_gw_live_stage.invoke_url}"
+    command = "${path.module}/apim_instance_deploy.sh ${var.env} ${var.apim_environment} ${data.aws_secretsmanager_secret.apim_account_private_key.arn} ${aws_api_gateway_deployment.live.invoke_url}"
   }
 }
