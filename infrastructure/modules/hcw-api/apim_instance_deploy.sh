@@ -17,6 +17,8 @@ else
 fi
 
 #Proxygen settings
+proxygen credentials set username ""
+proxygen credentials set password ""
 proxygen settings set api "healthcare-worker-api"
 proxygen settings set endpoint_url "https://proxygen.prod.api.platform.nhs.uk"
 proxygen settings set spec_output_format "yaml"
