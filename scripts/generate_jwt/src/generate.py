@@ -9,13 +9,14 @@ from time import time
 def generate_jwt():
     realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
 
-    if len(sys.argv) != 4:
-        print("Expected format poetry run start <private_key_filename> <key_id> <api_key>")
+    if len(sys.argv) != 2:
+        print("Expected format poetry run start <api_key>")
         exit(1)
 
-    private_key_filename = sys.argv[1]
-    key_id = sys.argv[2]
-    api_key = sys.argv[3]
+    # File not saved into git, it can be downloaded from AWS Secrets Manager "internal-dev/request-key" secret
+    private_key_filename = "./test-1.pem"
+    key_id = "test-1"
+    api_key = sys.argv[1]
 
     claims = {
         "sub": api_key,

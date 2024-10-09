@@ -37,6 +37,8 @@ to the S3 artifact bucket.
 
 ### Terraform
 
+TODO: Talk about pre-requisites to install: proxygen-cli and yq?
+
 The `infrastructure` directory contains everything needed to define an HCW AWS environment. Generally these changes should
 be deployed out through our GitHub pipelines, but sometimes you may need to test / build / deploy locally. This section
 guides through how to do that.
@@ -104,3 +106,37 @@ The "Deploy" action performs any relevant infrastructure changes, including upda
 The same pipeline (hcw-api-deployment) is triggered for merges to develop, but it deploys to "FT" instead of a PR dev environment. Once the deployment is complete it also triggers the "hcw-api-static-env-deployment" job.
 The main difference is that this pipeline requires approval before every deployment, ensuring that we don't update a higher environment accidentally.
 The deployments happen in other environments, so you'll need to log into the int or prod AWS accounts to see their logs, but the pipeline will show if the job ran successfully or not.
+
+## Testing
+
+APIM apps are automatically created for every raised PR. In order to start sending requests to those apps we have to
+register in a similar way to how new users will onboard. Note that some of these steps may be automated as part of [HCW-102](https://nhsd-jira.digital.nhs.uk/browse/HCW-102).
+
+1. Before starting, check the PR number of your raised PR. This is the number at the end of the PR URL, it also displays in the title after the #.
+2. Connect to the HSCN VPN
+3. Go to https://dos-dev.ptl.api.platform.nhs.uk/ and login. You can create a dev account through the UI if you haven't already.
+4. Click on "Environment Access"
+5. Click "Add new application"
+6. Select "Development"
+7. Select "Me"
+8. Enter an application name like "HCW PR-<pr_number>" and click "Continue"
+9. Select "Create Application"
+10. Select "View your new application"
+11. On the "Public key URL" line click "Edit"
+12. Enter the URL of `https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/refs/heads/main/jwks/internal-dev/5eef95c7-031c-4d7b-ab58-1fee6e91a915.json`, this related to a known key pair so we can generate valid requests using it.
+13. Select "Save" and then once confirmed click on your app name in the top breadcrumbs to return to the previous page
+14. Select "Add APIs"
+15. Search for PR-<pr_number> to find your app instance. Note that there are other projects in this space, so make sure you've selected a healthcare worker api
+16. Select your PR and click "Save"
+17. On the "Active API keys" line click "Edit"
+18. Make note of the key shown on this page as it's needed to generate valid requests
+
+With the above steps you have created a valid APIM app which will route requests to your PR. We can now start sending
+requests through to the HCW APIs. In order for these requests to be successful we need to authenticate with APIM using
+a signed JWT token. This repo includes a script for generating a valid auth jwt based on the above keypair.
+
+1. Make sure that you have the private key at `scripts/generate_jwt/test-1.pem`. This file is not checked into git for security. It can be downloaded from AWS Secret Manager `internal-dev/request-key` secret.
+2. Change to the scripts directory: `cd scripts/generate_jwt`
+3. Install the poetry dependencies: `poetry install`
+4. Run the script with the following command, replacing `<api_key>` with the API key from your app: `poetry run start <api_key>`
+5. The script will output the access token. This needs to be included in any requests in the `Authorization` header as `Bearer <access_token>`

@@ -53,6 +53,7 @@ module "app" {
   account = var.account
 
   s3_filename = var.app_s3_filename
+  apim_environment = var.apim_environment
 
   count = length(regexall("mgmt*", local.env)) == 0 ? 1 : 0
 }

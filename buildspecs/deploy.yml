@@ -11,12 +11,17 @@ env:
     app_s3_filename: ""
 
 phases:
+  runtime-versions:
+    python: 3.12
   install:
     commands:
       - yum install -y yum-utils
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum -y install terraform
       - terraform --version
+      - pip install proxygen-cli
+      - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+      - chmod +x /usr/bin/yq
   build:
     commands:
       - cd infrastructure

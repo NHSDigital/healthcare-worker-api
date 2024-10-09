@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   version: v0.1
-  title: Healthcare Worker API - PR 8
+  title: Healthcare Worker API
   description: |
     ## Overview
     Use this API to access details of healthcare workers registered in the [Care Identity Service (CIS)](https://digital.nhs.uk/services/care-identity-service) directory.

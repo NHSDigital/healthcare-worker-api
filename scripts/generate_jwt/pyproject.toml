@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "generate-jwt"
+version = "0.1.0"
+description = ""
+authors = ["Ian Robinson <ian.robinson27@nhs.net>"]
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pyjwt = "^2.9.0"
+
+[tool.poetry.scripts]
+start = "src.generate:generate_jwt"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
