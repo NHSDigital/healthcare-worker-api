@@ -1,6 +1,7 @@
 """
 Basic hello world app for an initial deployment
 """
+from aws_lambda_powertools.utilities.typing import LambdaContext
 from greeting import greeting_message
 from logs.log import Log
 
@@ -8,7 +9,7 @@ logger = Log("main")
 
 
 # pylint: disable=unused-argument
-def lambda_handler(event, context):
+def lambda_handler(event: dict, context: LambdaContext) -> dict:
     """
     Lambda event handler
     :param event: Event info passed to the lambda for this execution
