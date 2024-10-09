@@ -20,11 +20,6 @@ resource "aws_lambda_function" "hcw-app" {
   source_code_hash = data.aws_s3_object.app_deployment_zip.etag
 
   publish = true
-
-  vpc_config {
-    security_group_ids = [aws_security_group.app_security_group.id]
-    subnet_ids         = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
-  }
 }
 
 resource "aws_iam_role" "lambda_app_role" {

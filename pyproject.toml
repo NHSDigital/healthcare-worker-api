@@ -11,6 +11,7 @@ python = "^3.12"
 boto3 = "^1.35.33"
 pytest = "^8.3.3"
 aws-lambda-powertools = "^3.1.0"
+pydantic = "^2.9.2"
 
 [tool.poetry.scripts]
 start = "main:local_start"
