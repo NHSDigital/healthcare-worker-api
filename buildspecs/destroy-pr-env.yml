@@ -4,11 +4,16 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      python: 3.12
     commands:
       - yum install -y yum-utils
       - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - yum -y install terraform
       - terraform --version
+      - pip install proxygen-cli
+      - wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+      - chmod +x /usr/bin/yq
   build:
     commands:
       - |
@@ -20,4 +25,8 @@ phases:
 
           terraform workspace select ${env_name}
           terraform destroy -var-file="environments/dev.tfvars" --auto-approve
+
+          # Need to swap to a different workspace before we can delete this one
+          terraform workspace select ft
+          terraform workspace delete ${env_name}
         fi

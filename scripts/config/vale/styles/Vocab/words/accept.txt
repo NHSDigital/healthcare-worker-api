@@ -19,4 +19,5 @@ venv
 dev
 Dev
 jira
-
+yq
+keypair

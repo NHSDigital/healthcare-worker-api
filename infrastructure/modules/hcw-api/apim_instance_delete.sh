@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+#set -e
 
 environment_name=$1
 apim_environment=$2
@@ -34,3 +34,4 @@ echo "Set service credentials"
 # Deploy proxygen instance
 echo proxygen instance delete "$apim_environment" "healthcare-worker${env_name_suffix}"
 proxygen instance delete "$apim_environment" "healthcare-worker${env_name_suffix}"
+echo "Done"

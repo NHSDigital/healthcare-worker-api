@@ -1,2 +1,2 @@
-account = "prod"
+account          = "prod"
 apim_environment = "prod"
