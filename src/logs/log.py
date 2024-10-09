@@ -7,6 +7,8 @@ import sys
 
 from aws_lambda_powertools.utilities.data_classes import APIGatewayProxyEvent
 
+logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
 correlation_id = None
 
 
@@ -15,7 +17,6 @@ class Log:
     Class with basic logging functions for different severities
     """
     # Need to send these logs somewhere useful (i.e. cloudwatch) under HCW-98
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
     def __init__(self, module_name):
         self.logger = logging.getLogger(module_name)
