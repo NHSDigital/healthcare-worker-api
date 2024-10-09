@@ -64,7 +64,20 @@ resource "aws_api_gateway_integration" "worker_get_lambda_integration" {
 }
 
 resource "aws_api_gateway_deployment" "live" {
+  triggers = {
+    redeployment = sha1(jsonencode([
+      aws_api_gateway_resource.worker,
+      aws_api_gateway_method.worker_get,
+      aws_api_gateway_integration.worker_get_lambda_integration
+    ]))
+  }
   rest_api_id = aws_api_gateway_rest_api.app_api.id
+}
+
+resource "aws_api_gateway_stage" "live" {
+  deployment_id = aws_api_gateway_deployment.live.id
+  rest_api_id = aws_api_gateway_rest_api.app_api.id
+  stage_name = "live"
 }
 
 resource "aws_lambda_permission" "apigw_lambda" {
