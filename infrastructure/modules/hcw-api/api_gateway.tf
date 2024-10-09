@@ -72,6 +72,10 @@ resource "aws_api_gateway_deployment" "live" {
     ]))
   }
   rest_api_id = aws_api_gateway_rest_api.app_api.id
+
+  lifecycle {
+    create_before_destroy = True
+  }
 }
 
 resource "aws_api_gateway_stage" "live" {
