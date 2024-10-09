@@ -13,13 +13,14 @@ correlation_id = None
 
 
 class Log:
+    module_name: str
+
     """
     Class with basic logging functions for different severities
     """
-    # Need to send these logs somewhere useful (i.e. cloudwatch) under HCW-98
-
-    def __init__(self, module_name):
-        self.logger = logging.getLogger(module_name)
+    def __init__(self, module_name: str):
+        self.logger = logging.getLogger()
+        self.module_name = module_name
 
     @staticmethod
     def save_event_details(event: APIGatewayProxyEvent):
@@ -37,6 +38,7 @@ class Log:
         """
         global correlation_id
         correlation_id = None
+        logging.shutdown()
 
     def info(self, message: str):
         """
