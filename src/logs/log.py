@@ -21,13 +21,13 @@ class Log:
         self.logger = logging.getLogger(module_name)
 
     @staticmethod
-    def save_correlation_id(request_correlation_id):
+    def save_event_details(event):
         """
         Saves the correlation id from the request so we can use it in future logging calls
-        :param request_correlation_id: The correlation id from the request
+        :param event: Lambda event with details like correlation id
         """
         global correlation_id
-        correlation_id = request_correlation_id
+        correlation_id = event.headers['X-Correlation-ID']
 
     def info(self, message: str):
         """

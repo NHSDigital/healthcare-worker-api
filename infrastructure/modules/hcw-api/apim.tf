@@ -18,6 +18,6 @@ resource "terraform_data" "apim_instance_deploy" {
 
   provisioner "local-exec" {
     when = destroy
-    command = ""
+    command = "${path.module}/apim_instance_delete.sh ${var.env} ${var.apim_environment} ${data.aws_secretsmanager_secret.apim_account_private_key.arn}"
   }
 }

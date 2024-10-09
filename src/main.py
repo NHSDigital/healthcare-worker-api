@@ -16,6 +16,7 @@ def lambda_handler(event: dict, context: LambdaContext) -> dict:
     :param context: General context info for the lambda
     :return:
     """
+    logger.save_correlation_id()
     logger.info(f"Received event: {event} and context: {context}")
     greeting = greeting_message()
     logger.info(greeting)
