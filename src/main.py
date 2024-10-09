@@ -19,7 +19,6 @@ def lambda_handler(event, context):
     greeting = greeting_message()
     logger.info(greeting)
     return {
-        "cookies": [],
         "isBase64Encoded": False,
         "statusCode": 200,
         "headers": {"Content-Type": "application/json"},
