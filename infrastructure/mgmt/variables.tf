@@ -1,0 +1,4 @@
+variable "account" {
+  type = string
+}
+

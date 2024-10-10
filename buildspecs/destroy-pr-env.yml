@@ -1,0 +1,23 @@
+# This job is triggered directly by webhooks when a PR is closed or merged. It destroys the relevant dev
+# environment to save resources.
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum -y install terraform
+      - terraform --version
+  build:
+    commands:
+      - |
+        if expr "${CODEBUILD_SOURCE_VERSION}" : "pr/.*"  >/dev/null; then
+          cd infrastructure
+
+          export env_name="${CODEBUILD_SOURCE_VERSION/\//-}"
+          terraform init
+
+          terraform workspace select ${env_name}
+          terraform destroy -var-file="environments/dev.tfvars" --auto-approve
+        fi
