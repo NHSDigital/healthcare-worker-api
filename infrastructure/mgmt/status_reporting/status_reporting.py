@@ -10,7 +10,7 @@ def get_github_access_token() -> str:
     client = boto3.client("secretsmanager")
 
     response = client.get_secret_value(SecretId=secret_id)
-    return response.SecretString
+    return response["SecretString"]
 
 
 def get_commit_details(message):

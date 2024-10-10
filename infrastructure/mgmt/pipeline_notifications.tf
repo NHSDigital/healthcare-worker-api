@@ -93,7 +93,17 @@ resource "aws_iam_policy" "pipeline_update_lambda" {
           "logs:PutLogEvents"
         ],
         "Resource" : "*"
-    }
+      },
+      {
+        "Effect": "Allow",
+        "Action": "codepipeline:GetPipelineExecution",
+        "Resource": aws_codepipeline.app_deployment_pipeline.arn
+      },
+      {
+        "Effect": "Allow",
+        "Action": "secretsmanager:GetSecretValue",
+        "Resource": aws_secretsmanager_secret.github_access_token.arn
+      }
     ]
   })
 }
