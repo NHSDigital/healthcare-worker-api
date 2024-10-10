@@ -21,5 +21,5 @@ class WorkerHandler(BaseHandler):
         worker = FhirWorker()
         worker.id = worker_id
         worker.forename = "Bob"
-        worker.lastname = "Smith"
+        worker.lastname = "Smithson"
         return worker
