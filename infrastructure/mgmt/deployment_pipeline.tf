@@ -349,12 +349,20 @@ resource "aws_iam_policy" "integration_tests_policy" {
     Statement = [
       {
         "Effect" : "Allow",
+        "Action" : ["s3:PutObject", "s3:GetObject"],
+        "Resource" : [
+          aws_s3_bucket.build_artifacts.arn,
+          "${aws_s3_bucket.build_artifacts.arn}/*"
+        ]
+      },
+      {
+        "Effect" : "Allow",
         "Action" : ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
         "Resource" : [
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-integration-tests:log-stream",
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-integration-tests:log-stream:*",
         ]
-      }
+      },
     ]
   })
 }
