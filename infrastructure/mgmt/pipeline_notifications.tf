@@ -48,6 +48,14 @@ resource "aws_iam_role" "pipeline_update_lambda_role" {
   })
 }
 
+resource "aws_lambda_permission" "sns_pipeline_update" {
+  statement_id = "AllowExecutionFromSNS"
+  action = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.pipeline_update_lambda.function_name
+  principal = "sns.amazonaws.com"
+  source_arn = aws_sns_topic.pipeline_updates.arn
+}
+
 data "archive_file" "lambda_source" {
   type = "zip"
   source_file = "${path.module}/status_reporting/status_reporting.py"
