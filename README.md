@@ -113,14 +113,13 @@ The best way to test an environment is to use the integration tests in this repo
 then you need to create a PR first. This deploys the application to AWS and APIM, which is where the integration tests run against.
 The following steps describe how to set up and run these integration tests against any environment:
 
-1. Make sure that you have the private key file at `integration_test/utils/test-1.pem`. This key is used to validate requests sent to APIM and so is needed for all requests, but it isn't checked into git for security. It can be downloaded from AWS Secret Manager `internal-dev/request-key` secret.
-2. Modify the file at `integration_tests/locals.properties` based on the environment you're testing
+1. Modify the file at `integration_tests/locals.properties` based on the environment you're testing
    1. If you're testing a PR environment then you need to populate the `env` (e.g. `pr-16`) and `client_id` values. The `client_id` can be found in the deploy job output (`Client id = <client_id>`)
    2. If you're testing a static environment (e.g. ft) then you only need to put the environment name into the `env` field
-3. From the repository root make sure you've run a `poetry install` for any dependencies needed by the tests
-4. You can now run all integration tests from the command line by going to the `integration_tests` directory and running `pytest`
+2. From the repository root make sure you've run a `poetry install` for any dependencies needed by the tests
+3. You can now run all integration tests from the command line by going to the `integration_tests` directory and running `pytest`
    1. Note that running from the repository root does not trigger the integration tests, this is to separate them from the unit tests for normal running
-   2. You can also run individual tests from inside IDEs like pycharm
+   2. You can also run individual tests from inside IDEs like PyCharm
 
 ### Manual testing
 

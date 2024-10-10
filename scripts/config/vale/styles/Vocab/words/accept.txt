@@ -22,4 +22,3 @@ jira
 yq
 keypair
 yaml
-pycharm
