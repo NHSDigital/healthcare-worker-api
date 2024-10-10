@@ -72,6 +72,8 @@ resource "aws_lambda_function" "pipeline_update_lambda" {
 
   runtime = "python3.12"
 
+  timeout = 60
+
   environment {
     variables = {
       secret_id = aws_secretsmanager_secret.github_access_token.id

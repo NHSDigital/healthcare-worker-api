@@ -6,11 +6,15 @@ import urllib3
 
 
 def get_github_access_token() -> str:
-    secret_id = os.environ["secret_id"]
+    # secret_id = os.environ["secret_id"]
     client = boto3.client("secretsmanager")
 
-    response = client.get_secret_value(SecretId=secret_id)
+    response = client.get_secret_value(SecretId="github-access-token")
     return response["SecretString"]
+
+
+if __name__ == "__main__":
+    print(get_github_access_token())
 
 
 def get_commit_details(message):
@@ -19,10 +23,10 @@ def get_commit_details(message):
         pipelineName=message['detail']['pipeline'],
         pipelineExecutionId=message['detail']['execution-id']
     )
-    revision_url = response['pipelineExecution']['artifactRevisions'][0]['revisionUrl']
+    print(response)
     commit_id = response['pipelineExecution']['artifactRevisions'][0]['revisionId']
 
-    return revision_url, commit_id
+    return commit_id
 
 
 def build_status_update(message, state):
@@ -33,20 +37,17 @@ def build_status_update(message, state):
         'url': f"https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/${message['detail']['pipeline']}"
                f"/executions/${message['detail']['execution-id']}?region=eu-west-2"}
 
+    print(build_status)
     return build_status
 
 
-def send_status_update_request(revision_url, commit_id, build_status):
-    if "FullRepositoryId=" in revision_url:
-        repo_id = revision_url.split("FullRepositoryId=")[1].split("&")[0]
-    else:  # GitHub v1 integration
-        repo_id = revision_url.split("/")[3] + "/" + revision_url.split("/")[4]
+def send_status_update_request(commit_id, build_status):
+    url = "https://api.github.com/repos/NHSDigital/healthcare-worker-api/statuses/" + commit_id
 
-    url = "https://api.github.com/repos/" + repo_id + "/statuses/" + commit_id
-
+    print(f"Sending to URL {url}")
     http = urllib3.PoolManager()
     r = http.request('POST', url,
-                     headers={'Accept': 'application/json', 'Content-Type': 'application/json',
+                     headers={'Content-Type': 'application/json',
                               'Authorization': f"Bearer ${get_github_access_token()}"},
                      body=json.dumps(build_status).encode('utf-8')
                      )
@@ -80,6 +81,6 @@ def handler(event, context):
         # Means that we're not interested in this update
         return
 
-    revision_url, commit_id = get_commit_details(message)
+    commit_id = get_commit_details(message)
     build_status = build_status_update(message, state)
-    send_status_update_request(revision_url, commit_id, build_status)
+    send_status_update_request(commit_id, build_status)
