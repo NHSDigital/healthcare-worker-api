@@ -194,7 +194,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       input_artifacts = ["source_output"]
 
       configuration = {
-        ProjectName = "hcw-integration-test"
+        ProjectName = "hcw-integration-tests"
 
         EnvironmentVariables = jsonencode([
           {
