@@ -18,6 +18,7 @@ def generate_from_command_line():
 
 def generate_access_token(client_id: str):
     realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
+    print(f"client id = {client_id}")
 
     # File not saved into git, it can be downloaded from AWS Secrets Manager "internal-dev/request-key" secret
     private_key_filename = f"{os.path.dirname(os.path.realpath(__file__))}/test-1.pem"
@@ -48,5 +49,8 @@ def generate_access_token(client_id: str):
     )
 
     response = token_response.json()
+    if "access_token" not in response:
+        raise Exception(f"Failed to fetch access token, received error from token request: {response}")
+
     access_token = response["access_token"]
     return access_token
