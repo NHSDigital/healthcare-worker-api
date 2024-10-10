@@ -13,6 +13,8 @@ phases:
       python: 3.12
     commands:
       - pip install proxygen-cli
+      - pip install pipx
+      - python -m pipx install poetry
   build:
     commands:
       - |
