@@ -30,12 +30,15 @@ def get_commit_details(message):
 
 
 def build_status_update(message, state):
+    url = (f"https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/{message['detail']['pipeline']}"
+           f"/executions/{message['detail']['execution-id']}?region=eu-west-2")
+
     build_status = {
         'state': state,
-        'context': 'hcw-pipelineapp',
+        'context': 'HCW Deployment',
         'description': "CodePipeline: " + message['detail']['pipeline'],
-        'target_url': f"https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/{message['detail']['pipeline']}"
-                      f"/executions/{message['detail']['execution-id']}?region=eu-west-2"}
+        'target_url': url
+    }
 
     print(build_status)
     return build_status

@@ -122,7 +122,6 @@ The following steps describe how to set up and run these integration tests again
    1. Note that running from the repository root does not trigger the integration tests, this is to separate them from the unit tests for normal running
    2. You can also run individual tests from inside IDEs like pycharm
 
-
 ### Manual testing
 
 The current pipeline will automatically create APIM apps, and the integration tests handle authentication automatically.

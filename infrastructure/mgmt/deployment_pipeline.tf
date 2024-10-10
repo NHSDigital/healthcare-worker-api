@@ -154,7 +154,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       provider = "CodeBuild"
       version  = "1"
 
-      input_artifacts = ["source_output"]
+      input_artifacts  = ["source_output"]
       output_artifacts = ["client_id"]
 
       configuration = {
@@ -185,11 +185,11 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
     name = "Integration-Test"
 
     action {
-      name = "Integration-Test"
+      name     = "Integration-Test"
       category = "Build"
-      owner = "AWS"
+      owner    = "AWS"
       provider = "CodeBuild"
-      version = "1"
+      version  = "1"
 
       input_artifacts = ["source_output"]
 
@@ -198,14 +198,14 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
 
         EnvironmentVariables = jsonencode([
           {
-            name = "branch"
+            name  = "branch"
             value = "#{variables.branch}"
-            type = "PLAINTEXT"
+            type  = "PLAINTEXT"
           },
           {
-            name = "apim_private_key_secret_arn"
+            name  = "apim_private_key_secret_arn"
             value = aws_secretsmanager_secret.apim_account_private_key.arn
-            type = "PLAINTEXT"
+            type  = "PLAINTEXT"
           }
         ])
       }
@@ -364,9 +364,9 @@ resource "aws_iam_policy" "integration_tests_policy" {
         ]
       },
       {
-        "Effect": "Allow",
-        "Action": "secretsmanager:GetSecretValue"
-        "Resource": aws_secretsmanager_secret.apim_account_private_key.arn
+        "Effect" : "Allow",
+        "Action" : "secretsmanager:GetSecretValue"
+        "Resource" : aws_secretsmanager_secret.apim_account_private_key.arn
       }
     ]
   })
@@ -378,7 +378,7 @@ resource "aws_iam_role_policy_attachment" "integration_tests_attach_policy" {
 }
 
 resource "aws_codebuild_project" "integration_tests" {
-  name = "hcw-integration-tests"
+  name         = "hcw-integration-tests"
   service_role = aws_iam_role.integration_tests_role.arn
 
   environment {
