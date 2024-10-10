@@ -20,4 +20,6 @@ class WorkerHandler(BaseHandler):
         logger.info("Creating stub 123 worker")
         worker = FhirWorker()
         worker.id = worker_id
+        worker.forename = "Bob"
+        worker.lastname = "Smith"
         return worker
