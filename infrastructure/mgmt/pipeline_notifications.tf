@@ -24,7 +24,7 @@ resource "aws_codestarnotifications_notification_rule" "pipeline_update_notifica
   name = "pipeline-update-notification-rule"
   resource = aws_codepipeline.app_deployment_pipeline.arn
 
-  detail_type = "BASIC"
+  detail_type = "FULL"
   event_type_ids = ["codepipeline-pipeline-stage-execution-started", "codepipeline-pipeline-stage-execution-succeeded", "codepipeline-pipeline-stage-execution-failed"]
 
   target {
@@ -71,6 +71,12 @@ resource "aws_lambda_function" "pipeline_update_lambda" {
   source_code_hash = data.archive_file.lambda_source.output_sha512
 
   runtime = "python3.12"
+
+  environment {
+    variables = {
+      secret_id = aws_secretsmanager_secret.github_access_token.id
+    }
+  }
 }
 
 resource "aws_iam_policy" "pipeline_update_lambda" {
@@ -101,4 +107,8 @@ resource "aws_sns_topic_subscription" "pipeline_update_subscription" {
   topic_arn = aws_sns_topic.pipeline_updates.arn
   protocol = "lambda"
   endpoint = aws_lambda_function.pipeline_update_lambda.arn
+}
+
+resource "aws_secretsmanager_secret" "github_access_token" {
+  name = "github-access-token"
 }
