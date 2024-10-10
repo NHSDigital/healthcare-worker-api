@@ -324,11 +324,49 @@ resource "aws_codebuild_project" "hcw-deployment-trigger" {
     }
   }
 }
+resource "aws_iam_role" "integration_tests_role" {
+  name = "IntegrationTestsRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "codebuild.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "integration_tests_policy" {
+  name = "integration_tests_policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        "Effect" : "Allow",
+        "Action" : ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"]
+        "Resource" : [
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-integration-tests:log-stream",
+          "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-integration-tests:log-stream:*",
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "integration_tests_attach_policy" {
+  role       = aws_iam_role.integration_tests_role.name
+  policy_arn = aws_iam_policy.integration_tests_policy.arn
+}
 
 resource "aws_codebuild_project" "integration_tests" {
   name = "hcw-integration-tests"
-  # TODO: Setup a role specifically for the integration tests
-  service_role = aws_iam_role.deployment_trigger_role.arn
+  service_role = aws_iam_role.integration_tests_role.arn
 
   environment {
     compute_type = "BUILD_GENERAL1_SMALL"
