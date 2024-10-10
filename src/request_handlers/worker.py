@@ -15,7 +15,7 @@ class WorkerHandler(BaseHandler):
         if worker_id == "999":
             raise HcwException(404, "User not found")
         elif worker_id is None:
-            worker_id = "123"
+            worker_id = "111"
 
         logger.info("Creating stub 123 worker")
         worker = FhirWorker()
