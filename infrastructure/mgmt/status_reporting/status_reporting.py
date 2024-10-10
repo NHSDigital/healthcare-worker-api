@@ -54,7 +54,7 @@ def send_status_update_request(revision_url, commit_id, build_status):
 
 
 def get_commit_state(message):
-    stage = message["detail"]["Stage"].upper()
+    stage = message["detail"]["stage"].upper()
     state = message['detail']['state'].upper()
 
     if stage == "Source" and state == "STARTED":
