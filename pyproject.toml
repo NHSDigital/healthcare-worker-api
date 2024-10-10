@@ -12,7 +12,7 @@ boto3 = "^1.35.33"
 pytest = "^8.3.3"
 aws-lambda-powertools = "^3.1.0"
 pydantic = "1.10.18"
-pytest-nhsd-apim = "^3.4.3"
+setuptools = "^75.1.0"
 
 [tool.poetry.scripts]
 start = "main:local_start"
