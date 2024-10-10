@@ -155,6 +155,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       version  = "1"
 
       input_artifacts = ["source_output"]
+      output_artifacts = ["client_id"]
 
       configuration = {
         ProjectName = "hcw-api-deploy"
@@ -174,6 +175,37 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
             name  = "app_s3_filename"
             value = "#{Source.CommitId}.zip"
             type  = "PLAINTEXT"
+          }
+        ])
+      }
+    }
+  }
+
+  stage {
+    name = "Integration-Test"
+
+    action {
+      name = "Integration-Test"
+      category = "Build"
+      owner = "AWS"
+      provider = "CodeBuild"
+      version = "1"
+
+      input_artifacts = ["source_output", "client_id"]
+
+      configuration = {
+        ProjectName = "hcw-integration-test"
+
+        EnvironmentVariables = jsonencode([
+          {
+            name = "branch"
+            value = "#{variables.branch}"
+            type = "PLAINTEXT"
+          },
+          {
+            name = "apim_private_key_secret_arn"
+            value = aws_secretsmanager_secret.apim_account_private_key.arn
+            type = "PAINTEXT"
           }
         ])
       }
@@ -293,3 +325,28 @@ resource "aws_codebuild_project" "hcw-deployment-trigger" {
   }
 }
 
+resource "aws_codebuild_project" "integration_tests" {
+  name = "hcw-integration-tests"
+  # TODO: Setup a role specifically for the integration tests
+  service_role = aws_iam_role.deployment_trigger_role.arn
+
+  environment {
+    compute_type = "BUILD_GENERAL1_SMALL"
+    image        = "aws/codebuild/amazonlinux2-x86_64-standard:5.0"
+    type         = "LINUX_CONTAINER"
+  }
+
+  artifacts {
+    type = "NO_ARTIFACTS"
+  }
+
+  source {
+    type      = "GITHUB"
+    location  = "https://github.com/NHSDigital/healthcare-worker-api"
+    buildspec = "buildspecs/integration-tests.yml"
+
+    git_submodules_config {
+      fetch_submodules = false
+    }
+  }
+}

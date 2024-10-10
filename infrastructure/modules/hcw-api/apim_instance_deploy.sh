@@ -31,14 +31,14 @@ if [[ "$environment_name" == pr-* ]]; then
   echo "Creating APIM proxy app for new PR env"
   access_token=$(proxygen pytest-nhsd-apim get-token | jq -r ".pytest_nhsd_apim_token")
 
-  existing_app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/${service_base_path}" \
+  app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/${service_base_path}" \
     --header "Authorization: Bearer ${access_token}" \
     --header 'Content-Type: application/json')
-  existing_app_id=$(echo "$existing_app_details" | jq -r ".appId")
+  existing_app_id=$(echo "$app_details" | jq -r ".appId")
 
   if [[ "$existing_app_id" != "null" ]]; then
     echo "App already created, checking if the api product is still linked"
-    api_product=$(echo "$existing_app_details" | jq -r ".credentials[0].apiProducts")
+    api_product=$(echo "$app_details" | jq -r ".credentials[0].apiProducts")
     if [[ "$api_product" == "[]" ]]; then
         echo "The API product has been removed, so we need to remove and re-create the app"
         curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/${service_base_path}" \
@@ -85,9 +85,9 @@ if [[ "$environment_name" == pr-* ]]; then
 
     echo "App creation request sent:"
     echo "$app_details"
-
-    env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
-    echo "Generated client id = ${env_app_client_id}"
   fi
+
+  env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
+  echo "Client id = ${env_app_client_id}"
 fi
 

@@ -1,26 +1,31 @@
+import os.path
 import sys
-import requests
-
-import jwt
 import uuid
 from time import time
+import jwt
+import requests
 
 
-def generate_access_token():
-    realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
-
+def generate_from_command_line():
     if len(sys.argv) != 2:
         print("Expected format poetry run start <api_key>")
         exit(1)
 
+    client_id = sys.argv[1]
+    access_token = generate_access_token(client_id)
+    print(f"Access token: {access_token}")
+
+
+def generate_access_token(client_id: str):
+    realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
+
     # File not saved into git, it can be downloaded from AWS Secrets Manager "internal-dev/request-key" secret
-    private_key_filename = "./test-1.pem"
+    private_key_filename = f"{os.path.dirname(os.path.realpath(__file__))}/test-1.pem"
     key_id = "test-1"
-    api_key = sys.argv[1]
 
     claims = {
-        "sub": api_key,
-        "iss": api_key,
+        "sub": client_id,
+        "iss": client_id,
         "jti": str(uuid.uuid4()),
         "aud": realm_url,
         "exp": int(time()) + 300,
@@ -44,4 +49,4 @@ def generate_access_token():
 
     response = token_response.json()
     access_token = response["access_token"]
-    print(f"Access token: {access_token}")
+    return access_token

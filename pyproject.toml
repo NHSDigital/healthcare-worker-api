@@ -4,7 +4,7 @@ version = "0.0.1"
 authors = ["Ian Robinson <ian.robinson27@nhs.net>", "Sat Thakor <satyarajsinh.thakor1@nhs.net>"]
 description = "Healthcare Worker API for fetching healthcare worker information"
 readme = "README.md"
-packages = [{include = "*/*", from="src"}, {include = "*", from="src"}]
+packages = [{include = "*/*", from="src"}, {include = "*", from="src"}, {include = "*", from = "integration_tests"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -13,9 +13,15 @@ pytest = "^8.3.3"
 aws-lambda-powertools = "^3.1.0"
 pydantic = "1.10.18"
 setuptools = "^75.1.0"
+jproperties = "^2.1.2"
+requests = "^2.32.3"
+pyjwt = "^2.9.0"
+cryptography = "^42.0.1"
+proxygen-cli = "^2.1.14"
 
 [tool.poetry.scripts]
 start = "main:local_start"
+token = "utils.generate_access_token:generate_from_command_line"
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
