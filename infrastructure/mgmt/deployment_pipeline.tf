@@ -191,7 +191,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       provider = "CodeBuild"
       version = "1"
 
-      input_artifacts = ["source_output", "client_id"]
+      input_artifacts = ["source_output"]
 
       configuration = {
         ProjectName = "hcw-integration-test"
