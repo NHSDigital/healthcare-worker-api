@@ -31,11 +31,11 @@ def get_commit_details(message):
 
 def build_status_update(message, state):
     build_status = {
-        'key': message['detail']['execution-id'],
         'state': state,
-        'name': "CodePipeline: " + message['detail']['pipeline'],
-        'url': f"https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/${message['detail']['pipeline']}"
-               f"/executions/${message['detail']['execution-id']}?region=eu-west-2"}
+        'context': 'hcw-pipelineapp',
+        'description': "CodePipeline: " + message['detail']['pipeline'],
+        'target_url': f"https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/{message['detail']['pipeline']}"
+                      f"/executions/{message['detail']['execution-id']}?region=eu-west-2"}
 
     print(build_status)
     return build_status
@@ -48,7 +48,7 @@ def send_status_update_request(commit_id, build_status):
     http = urllib3.PoolManager()
     r = http.request('POST', url,
                      headers={'Content-Type': 'application/json',
-                              'Authorization': f"Bearer ${get_github_access_token()}"},
+                              'Authorization': f"Bearer {get_github_access_token()}"},
                      body=json.dumps(build_status).encode('utf-8')
                      )
     print(r.data)
