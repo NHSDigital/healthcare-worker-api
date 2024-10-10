@@ -15,13 +15,14 @@ phases:
       - pip install proxygen-cli
   build:
     commands:
-      - echo "Do some integration tests here based on ${branch}"
-      - source ./infrastructure/modules/hcw-api/proxygen-setup.sh "$apim_private_key_secret_arn"
-      - env_suffix="_${branch}"
-      - access_token=$(proxygen pytest-nhsd-apim get-token | jq -r ".pytest_nhsd_apim_token")
       - |
+        echo "Do some integration tests here based on ${branch}"
+        source ./infrastructure/modules/hcw-api/proxygen-setup.sh "$apim_private_key_secret_arn"
+        env_suffix="_${branch}"
+        access_token=$(proxygen pytest-nhsd-apim get-token | jq -r ".pytest_nhsd_apim_token")
         app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/healthcare_worker${env_suffix}" \
           --header "Authorization: Bearer ${access_token}" \
           --header 'Content-Type: application/json')
-      - env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
-      - echo "client id = ${env_app_client_id}"
+        echo $app_details
+        env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
+        echo "client id = ${env_app_client_id}"
