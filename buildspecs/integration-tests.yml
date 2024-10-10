@@ -15,6 +15,8 @@ phases:
       - pip install proxygen-cli
       - pip install pipx
       - python -m pipx install poetry
+      - python -m pipx ensurepath
+      - source ~/.bashrc
   build:
     commands:
       - |
