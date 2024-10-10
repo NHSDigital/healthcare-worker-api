@@ -56,12 +56,13 @@ def send_status_update_request(revision_url, commit_id, build_status):
 def get_commit_state(message):
     stage = message["detail"]["stage"].upper()
     state = message['detail']['state'].upper()
+    print(f"Checking with {stage} and {state}")
 
-    if stage == "Source" and state == "STARTED":
+    if stage == "SOURCE" and state == "STARTED":
         # Means that the pipeline just started
         return "pending"
 
-    if stage == "Integration-Test" and state == "SUCCEEDED":
+    if stage == "INTEGRATION-TEST" and state == "SUCCEEDED":
         # Means that integration tests have run successfully
         return "success"
 
