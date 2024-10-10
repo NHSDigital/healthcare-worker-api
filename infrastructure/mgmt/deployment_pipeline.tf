@@ -363,6 +363,11 @@ resource "aws_iam_policy" "integration_tests_policy" {
           "arn:aws:logs:eu-west-2:${local.account_id}:log-group:/aws/codebuild/hcw-integration-tests:log-stream:*",
         ]
       },
+      {
+        "Effect": "Allow",
+        "Action": "secretsmanager:GetSecretValue"
+        "Resource": aws_secretsmanager_secret.apim_account_private_key.arn
+      }
     ]
   })
 }

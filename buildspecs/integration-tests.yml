@@ -8,6 +8,11 @@ env:
 
 # TODO: Think of the changes required for ft here, (messing around with the branch name)
 phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - pip install proxygen-cli
   build:
     commands:
       - echo "Do some integration tests here based on ${branch}"
