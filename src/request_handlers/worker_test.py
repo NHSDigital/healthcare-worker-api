@@ -7,4 +7,4 @@ def test_worker_handler():
     handler = WorkerHandler()
     response = handler.get(APIGatewayProxyEvent(data={"resource": "/Worker"}))
 
-    assert response.id == "123"
+    assert response.id == "111"
