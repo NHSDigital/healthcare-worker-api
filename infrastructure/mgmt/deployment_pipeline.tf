@@ -205,7 +205,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           {
             name = "apim_private_key_secret_arn"
             value = aws_secretsmanager_secret.apim_account_private_key.arn
-            type = "PAINTEXT"
+            type = "PLAINTEXT"
           }
         ])
       }
