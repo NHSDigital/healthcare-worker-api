@@ -20,18 +20,50 @@ else
   echo "No name suffix set"
 fi
 
-#Proxygen settings
-yes "" | proxygen credentials set
-proxygen settings set api "healthcare-worker-api"
-proxygen settings set endpoint_url "https://proxygen.prod.api.platform.nhs.uk"
-proxygen settings set spec_output_format "yaml"
-
-# Get proxygen private key to allow for proxy instance deployment
-aws secretsmanager get-secret-value --secret-id "$apim_private_key_secret_arn" | jq -r ".SecretString" > /tmp/proxygen_private_key.pem
-ls /tmp/proxygen_private_key.pem
-proxygen credentials set private_key_path /tmp/proxygen_private_key.pem key_id key-1 client_id healthcare-worker-api-client
-echo "Set service credentials"
+source ./modules/hcw-api/proxygen-setup.sh "$apim_private_key_secret_arn"
 
 # Deploy proxygen instance
-echo proxygen instance deploy --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}" ./temp_spec.yaml
-proxygen instance deploy --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}" ./temp_spec.yaml
+service_base_path="healthcare-worker${env_name_suffix}"
+echo proxygen instance deploy --no-confirm "$apim_environment" "${service_base_path}" ./temp_spec.yaml
+proxygen instance deploy --no-confirm "$apim_environment" "${service_base_path}" ./temp_spec.yaml
+
+if [[ "$environment_name" == pr-* ]]; then
+  echo "Creating APIM proxy app for new PR env"
+  access_token=$(proxygen pytest-nhsd-apim get-token)
+
+  echo "Creating new Apigee app"
+  api_body="{
+        \"apiProducts\": [
+            \"${service_base_path}\"
+        ],
+        \"attributes\": [
+            {
+                \"name\": \"DisplayName\",
+                \"value\": \"${service_base_path}\"
+            },
+            {
+                \"name\": \"environment\",
+                \"value\": \"internal-dev\"
+            },
+            {
+                \"name\": \"jwks-resource-url\",
+                \"value\": \"https://raw.githubusercontent.com/NHSDigital/identity-service-jwks/refs/heads/main/jwks/internal-dev/5eef95c7-031c-4d7b-ab58-1fee6e91a915.json\"
+            }
+        ],
+        \"name\": \"${service_base_path}\",
+        \"scopes\": [],
+        \"status\": \"approved\"
+    }"
+
+    app_details=$(curl --location 'https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps' \
+      --header "Authorization: Bearer ${access_token}" \
+      --header 'Content-Type: application/json' \
+      --data "$api_body")
+
+    echo "App creation request sent:"
+    echo "$app_details"
+
+    env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
+    echo "Generated client id = ${env_app_client_id}"
+fi
+
