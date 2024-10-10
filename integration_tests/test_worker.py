@@ -36,7 +36,7 @@ class TestWorker(IntegrationTest):
         worker_details = response.json()
 
         assert response.status_code == 200
-        assert worker_details == {"id": "123"}
+        assert worker_details == {"id": "111"}
 
     def test_get_missing_worker(self):
         # Just for testing purposes worker 999 is not found
