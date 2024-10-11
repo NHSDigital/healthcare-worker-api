@@ -20,7 +20,6 @@ def generate_access_token(client_id: str):
     realm_url = "https://internal-dev.api.service.nhs.uk/oauth2/token"
     print(f"client id = {client_id}")
 
-    # File not saved into git, it can be downloaded from AWS Secrets Manager "internal-dev/request-key" secret
     private_key_filename = f"{os.path.dirname(os.path.realpath(__file__))}/test-1.pem"
     key_id = "test-1"
 
