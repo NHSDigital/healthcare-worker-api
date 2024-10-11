@@ -1,0 +1,264 @@
+openapi: 3.0.3
+info:
+  version: v0.1
+  title: Healthcare Worker API
+  description: |
+    ## Overview
+    Use this API to access details of healthcare workers registered in the [Care Identity Service (CIS)](https://digital.nhs.uk/services/care-identity-service) directory.
+
+    You can:
+    - get basic professional details of any healthcare worker with an active care identity, using their unique ID (this is sometimes known as SDS user ID or Smartcard ID).
+
+    You cannot currently use this API to:
+    - search by professional codes, such as GMC or RNC code
+
+    ## Who can use this API
+    This API can only be used where there is a legal basis to do so. Make sure you have a valid use case before you go too far with your development.
+
+    You must do this before you can go live (see "Onboarding" below).
+
+    ## API status and roadmap
+    This API is [in alpha](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#statuses).
+
+    To see our roadmap, or to suggest, comment or vote on features for this API, see our [interactive product backlog](https://nhs-digital-api-management.featureupvote.com/suggestions/204411/healthcare-professionals-api).
+
+    If you  have any other queries, [contact us](https://digital.nhs.uk/developer/help-and-support).
+
+    ## Service level
+    This API is a *(insert service level)* service during alpha, meaning it is operational and supported only during business hours (8am to 6pm), Monday to Friday excluding bank holidays.
+
+    For more details, see [service levels](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#service-levels).
+
+    ## Technology
+    This API is [RESTful](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#basic-rest).
+
+    It conforms to the [FHIR](https://digital.nhs.uk/developer/guides-and-documentation/our-api-technologies#fhir) global standard for health care data exchange, specifically to [FHIR R4 (v4.0.1)](https://hl7.org/fhir/r4/), except that it does not support the [capabilities](http://hl7.org/fhir/R4/http.html#capabilities) interaction.
+
+    It includes some country-specific FHIR extensions, which conform to [FHIR UK Core](https://digital.nhs.uk/services/fhir-uk-core), specifically [fhir.r4.ukcore.stu1 0.5.1](https://simplifier.net/packages/fhir.r4.ukcore.stu1/0.5.1).
+
+    You do not need to know much about FHIR to use this API - FHIR APIs are just RESTful APIs that follow specific rules. In particular:
+    - resource names are capitalised and singular, for example `/Endpoint` not `/endpoints`
+
+    Errors handling in this API follows [NHS guidelines](https://nhsconnect.github.io/FHIR-SpineCore/resources_error_handling.html) and produces an [OperationOutcome](https://fhir.nhs.uk/STU3/StructureDefinition/Spine-OperationOutcome-1) FHIR resource response with appropriate HTTP code
+
+    ## Network access
+    This API is available on the internet and, indirectly, on the [Health and Social Care Network (HSCN).](https://digital.nhs.uk/services/health-and-social-care-network)
+
+    For more details see [Network access for APIs](https://digital.nhs.uk/developer/guides-and-documentation/network-access-for-apis).
+
+    ## Security and authorisation
+    This API is [application-restricted](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation#application-restricted-apis), meaning we authenticate the calling application but not the end user.
+
+    To use this API, use the following security pattern:
+
+    * [Application-restricted RESTful APIs - API key authentication](https://digital.nhs.uk/developer/guides-and-documentation/security-and-authorisation/application-restricted-restful-apis-api-key-authentication)
+
+    ## Environments and testing
+    | Environment       | Base URL
+    | ----------------- | ---------------------------------------------------------------------|
+    | Sandbox           | `insert URL`                                                         |
+    | Integration test  | `insert URL`                                                         |
+    | Deployment / UAT  | `insert URL`                                                         |
+    | Production        | `insert URL`                                                         |
+
+    ### Sandbox testing
+    Our [sandbox environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#sandbox-testing):
+    * is for early developer testing
+    * only covers a limited set of scenarios
+    * is open-access, so does not allow you to test authorisation
+
+    For more details on sandbox testing, or to try out the sandbox using our \"Try this API\" feature, see the documentation for each endpoint.
+
+    ### Integration testing
+    Our [integration test environment](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing):
+    - is for formal integration testing.
+    - includes application authentication
+
+    **_Delete / edit as appropriate_**
+    This API does not have a standard test data pack as it will be dependant on the service you are trying to access, for more details see [Spine Services and Interaction IDs](https://nhsconnect.github.io/FHIR-SpineCore/security_interaction_ids.html) and [integration testing with our RESTful APIs](https://digital.nhs.uk/developer/guides-and-documentation/testing#integration-testing-with-our-restful-apis).
+
+    ### Deployment and user acceptance testing
+    Our deployment environment is for testing applications in-situ before live deployments and also for user acceptance testing (UAT) with NHS organisations.
+
+    This environment is for use by developers who are using the SDS FHIR API alongside some of our older APIs where the deployment environment is already in use,
+    for example, developers who have migrated from the [Query Accredited System Information API](https://digital.nhs.uk/developer/api-catalogue/query-accredited-system-information-soap).
+
+    ## Related APIs
+    The following APIs are related to this one:
+    - [Spine Directory Service - LDAP API](https://digital.nhs.uk/developer/api-catalogue/spine-directory-service-ldap) - Access details of organisations, people and systems registered in the Spine Directory Service (SDS) using our LDAP API.
+
+    ## Onboarding
+    You need to get your software approved by us before it can go live with this API. We call this onboarding. The onboarding process can sometimes be quite long, so it's worth planning well ahead.
+
+    **_Describe onboarding process_**
+
+    ## Errors
+    We use standard HTTP status codes to show whether an API request succeeded or not. They are usually in the range:
+
+    * 200 to 299 if it succeeded, including code 202 if it was accepted by an API that needs to wait for further action
+    * 400 to 499 if it failed because of a client error by your application
+    * 500 to 599 if it failed because of an error on our server
+
+    Errors specific to each API are shown in the Endpoints section, under Response. See our [reference guide](https://digital.nhs.uk/developer/guides-and-documentation/reference-guide#http-status-codes) for more on errors.
+  contact:
+    name: Spine Directory Service API Support
+    url: https://digital.nhs.uk/developer/help-and-support
+    email: api.management@nhs.net
+security:
+  - app-level3: []
+servers:
+  - url: TBC sandbox URL
+    description: Sandbox environment
+x-nhsd-apim:
+  monitoring: true
+  access:
+    - title: "Application Restricted"
+      grants:
+        app-level3: []
+  target:
+    type: external
+    healthcheck: /
+    url:
+    security:
+      type: apikey
+      header: X-API-Key
+      secret: example-apikey-secret-name
+paths:
+  /Worker:
+    get:
+      summary: Get healthcare worker details
+      operationId: getWorker
+      description: |
+        # Overview
+        Use this endpoint to get details of healthcare workers in the CIS directory.
+
+        This endpoint will return the matching Person object from the directory, which provides the following information:
+          * Name
+          * Title
+          * Details of any organisations the worker is associated with
+          * Details of [roles](https://digital.nhs.uk/data-and-information/publications/statistical/appointments-in-general-practice/sds-role-groups) the worker holds at each organisation
+
+        Only active objects, showing current organisation and roles will be returned. If the care identity itself is closed, a 410 response will be returned (see below).
+
+        To get the information, you must supply:
+          * CIS unique identifier (sometimes known as SDS user ID or smartcard ID)
+
+      parameters:
+        - in: query
+          name: identifier
+          description: SDS user ID which uniquely identifies a person.
+          required: true
+          example: 123456789012
+          schema:
+            type: string
+          explode: true
+        - in: header
+          name: X-Correlation-Id
+          description: UUID for request tracking
+          schema:
+            type: string
+            format: uuid
+          required: true
+          example: 6d3d3674-7ce5-11ec-90d6-0242ac120003
+        - in: header
+          name: apikey
+          description: API key to authenticate with. Use any value for Sandbox environment.
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  person:
+                    $ref: '#/components/schemas/Worker'
+        '400':
+          description: Missing or invalid query parameter(s).
+        '404':
+          description: Invalid endpoint path
+        '405':
+          description: Unsupported HTTP method. For this endpoint only GET is available
+        '410':
+          description: Resource closed. The requested care identity profile is no longer active.
+        '500':
+          description: Unhandled internal server error
+        '502':
+          description: Upstream system returned an unsupported response
+        '504':
+          description: Upstream server request has timed out
+components:
+  securitySchemes:
+    app-level3:
+      $ref: https://proxygen.prod.api.platform.nhs.uk/components/securitySchemes/app-level3
+  schemas:
+    Worker:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Auto generated unique ID for the person.
+          example: 123456789012
+        forename:
+          type: string
+          description: The forename or given name of a person.
+          example: Jane
+        middlenames:
+          type: string
+          description: The middle names of a person.
+          example: Alison
+        surname:
+          type: string
+          description: That part of a person's name which is used to describe family, clan, tribal group, or marital association.
+          example: Smith
+        initials:
+          type: string
+          description: All middle initials, excludes first name initial.
+          example: A
+        title:
+          type: string
+          description: Standard form of address used to precede a person's name
+          example: Ms
+        orgPersons:
+          type: array
+          description: Information relating a person to a specific organisation.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Auto generated unique ID for the organisational person.
+                example: 345678901234
+              dateOpened:
+                type: string
+                description: Date organisational person was opened/re-opened. (yyyymmdd)
+                example: 20210131
+              orgName:
+                type: string
+                description: Official name for the associated organisation, taken from ODS.
+                example: THE CROOKES PRACTICE
+              orgId:
+                type: string
+                description: Official code for the associated organisation, taken from ODS.
+                example: G7125085
+              roleProfiles:
+                type: array
+                description: The details of a user’s specific roles within a specific organisation.
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Auto generated unique ID for the role profile.
+                      example: 567890123456
+                    roleName:
+                      type: string
+                      description: Name of the assigned role.
+                      example: General Medical Practitioner
+                    roleCode:
+                      type: string
+                      description: Code of the assigned role.
+                      example: R0260

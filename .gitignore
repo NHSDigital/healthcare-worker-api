@@ -19,3 +19,4 @@ __pycache__
 package
 
 hcw-api.zip
+*.pem

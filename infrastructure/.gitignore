@@ -31,3 +31,6 @@ tf.plan
 terraform.rc
 
 .terraform.lock.hcl
+
+temp_spec.yaml
+status_reporting.zip

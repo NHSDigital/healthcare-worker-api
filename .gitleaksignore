@@ -2,3 +2,7 @@
 
 cd9c0efec38c5d63053dd865e5d4e207c0760d91:docs/guides/Perform_static_analysis.md:generic-api-key:37
 4ed7e15694a58143de6aaedc1ca874cd3d319e5e:pyproject.toml:ipv4:11
+a2838f7ee7bd4fd7500678d052e335e8a81738b7:integration_tests/locals.properties:generic-api-key:4
+f94749cf68abb44a18bb3823e9df423721114657:integration_tests/locals.properties:generic-api-key:4
+f94749cf68abb44a18bb3823e9df423721114657:integration_tests/utils/test-1.pem:private-key:1
+3ed320cfe3fca854a9822dca30f04f451a73c72d:integration_tests/utils/test-1.pem:private-key:1
