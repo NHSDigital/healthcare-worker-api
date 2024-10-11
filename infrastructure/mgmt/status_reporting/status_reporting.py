@@ -22,7 +22,7 @@ def get_commit_details(message):
     print(response)
     commit_id = response['pipelineExecution']['artifactRevisions'][0]['revisionId']
     variables = response['pipelineExecution']['variables']
-    branch = filter(lambda env: env["name"] == "branch", variables)[0]
+    branch = next(filter(lambda env: env["name"] == "branch", variables))
 
     return commit_id, branch
 
