@@ -31,11 +31,12 @@ phases:
         app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/healthcare-worker${env_suffix}" \
           --header "Authorization: Bearer ${access_token}" \
           --header 'Content-Type: application/json')
-        env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
+        export env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
         echo "client id = ${env_app_client_id}"
 
         poetry install
       - |
         echo "Run integration tests"
         cd integration_tests
+        echo TEST_ENV=${branch} TEST_CLIENT_ID=${env_app_client_id} poetry run pytest
         TEST_ENV=${branch} TEST_CLIENT_ID=${env_app_client_id} poetry run pytest
