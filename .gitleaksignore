@@ -8,3 +8,4 @@ f94749cf68abb44a18bb3823e9df423721114657:integration_tests/utils/test-1.pem:priv
 3ed320cfe3fca854a9822dca30f04f451a73c72d:integration_tests/utils/test-1.pem:private-key:1
 9e15b8859e478e13002100a441f99fe24c046089:integration_tests/utils/test-1.pem:private-key:1
 c87c1c0159cd68ba7e0cccb93e71817e086a1a8e:integration_tests/config/ft_environment.py:generic-api-key:5
+f4dff8fe1b24eda6b8f10c946bd2c2b438cba597:integration_tests/config/ft_environment.py:generic-api-key:5
