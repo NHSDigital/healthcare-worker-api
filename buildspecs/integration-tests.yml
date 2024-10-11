@@ -6,7 +6,6 @@ env:
     branch: ""
     apim_private_key_secret_arn: ""
 
-# TODO: Think of the changes required for ft here, (messing around with the branch name)
 phases:
   install:
     runtime-versions:
@@ -22,7 +21,11 @@ phases:
       - |
         echo "Setting up for integration tests"
         source ./infrastructure/modules/hcw-api/proxygen-setup.sh "$apim_private_key_secret_arn"
-        env_suffix="_${branch}"
+        if [[ "${branch}" == "ft" ]]; then
+          env_suffix=""
+        else
+          env_suffix="_${branch}"
+        fi
 
         access_token=$(proxygen pytest-nhsd-apim get-token | jq -r ".pytest_nhsd_apim_token")
         app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/healthcare-worker${env_suffix}" \

@@ -6,15 +6,11 @@ import urllib3
 
 
 def get_github_access_token() -> str:
-    # secret_id = os.environ["secret_id"]
+    secret_id = os.environ["secret_id"]
     client = boto3.client("secretsmanager")
 
-    response = client.get_secret_value(SecretId="github-access-token")
+    response = client.get_secret_value(SecretId=secret_id)
     return response["SecretString"]
-
-
-if __name__ == "__main__":
-    print(get_github_access_token())
 
 
 def get_commit_details(message):
@@ -25,8 +21,10 @@ def get_commit_details(message):
     )
     print(response)
     commit_id = response['pipelineExecution']['artifactRevisions'][0]['revisionId']
+    variables = response['pipelineExecution']['variables']
+    branch = filter(lambda env: env["name"] == "branch", variables)[0]
 
-    return commit_id
+    return commit_id, branch
 
 
 def build_status_update(message, state):
@@ -84,6 +82,10 @@ def handler(event, context):
         # Means that we're not interested in this update
         return
 
-    commit_id = get_commit_details(message)
+    commit_id, branch = get_commit_details(message)
     build_status = build_status_update(message, state)
     send_status_update_request(commit_id, build_status)
+
+    if branch == "ft":
+        # Means that we're running the build from develop to deploy to ft
+        print("Deploying to FT, in the future will insert logic here to publish updates to the team")
