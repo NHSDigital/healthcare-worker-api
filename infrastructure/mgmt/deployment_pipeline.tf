@@ -203,7 +203,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
           },
           {
             name  = "apim_private_key_secret_arn"
-            value = aws_secretsmanager_secret.apim_account_private_key.arn
+            value = data.aws_secretsmanager_secret.apim_account_private_key.arn
             type  = "PLAINTEXT"
           }
         ])
@@ -366,7 +366,7 @@ resource "aws_iam_policy" "integration_tests_policy" {
       {
         "Effect" : "Allow",
         "Action" : "secretsmanager:GetSecretValue"
-        "Resource" : aws_secretsmanager_secret.apim_account_private_key.arn
+        "Resource" : data.aws_secretsmanager_secret.apim_account_private_key.arn
       }
     ]
   })
