@@ -154,8 +154,7 @@ resource "aws_codepipeline" "app_deployment_pipeline" {
       provider = "CodeBuild"
       version  = "1"
 
-      input_artifacts  = ["source_output"]
-      output_artifacts = ["client_id"]
+      input_artifacts = ["source_output"]
 
       configuration = {
         ProjectName = "hcw-api-deploy"
@@ -324,6 +323,7 @@ resource "aws_codebuild_project" "hcw-deployment-trigger" {
     }
   }
 }
+
 resource "aws_iam_role" "integration_tests_role" {
   name = "IntegrationTestsRole"
 

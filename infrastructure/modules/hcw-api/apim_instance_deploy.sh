@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 set -e
@@ -90,4 +91,3 @@ if [[ "$environment_name" == pr-* ]]; then
   env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
   echo "Client id = ${env_app_client_id}"
 fi
-
