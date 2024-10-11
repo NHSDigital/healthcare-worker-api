@@ -6,3 +6,5 @@ a2838f7ee7bd4fd7500678d052e335e8a81738b7:integration_tests/locals.properties:gen
 f94749cf68abb44a18bb3823e9df423721114657:integration_tests/locals.properties:generic-api-key:4
 f94749cf68abb44a18bb3823e9df423721114657:integration_tests/utils/test-1.pem:private-key:1
 3ed320cfe3fca854a9822dca30f04f451a73c72d:integration_tests/utils/test-1.pem:private-key:1
+9e15b8859e478e13002100a441f99fe24c046089:integration_tests/utils/test-1.pem:private-key:1
+c87c1c0159cd68ba7e0cccb93e71817e086a1a8e:integration_tests/config/ft_environment.py:generic-api-key:5

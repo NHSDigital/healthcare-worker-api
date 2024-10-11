@@ -13,7 +13,6 @@ def generate_access_token():
         print("Expected format poetry run start <api_key>")
         exit(1)
 
-    # File not saved into git, it can be downloaded from AWS Secrets Manager "internal-dev/request-key" secret
     private_key_filename = "./test-1.pem"
     key_id = "test-1"
     api_key = sys.argv[1]
