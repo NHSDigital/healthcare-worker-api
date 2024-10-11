@@ -6,7 +6,7 @@
 # should be represented here with the exception of:
 #   - dependency scanning, which we expect to be applied at the repository level
 #   - secret scanning, which we expect to be a pre-commit hook
-#   - code review, which is outside the scope of automated testing for the moment
+#   - code review, which is outside the scope of automated state for the moment
 
 test-unit: # Run your unit tests from scripts/test/unit @Testing
 	make _test name="unit"

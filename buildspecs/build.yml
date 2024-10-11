@@ -1,0 +1,26 @@
+# This is triggered as part of the codepipeline run. It takes the python sourcecode and builds it into
+# a deployable package. We are deliberately not running tests here, which are covered elsewhere.
+# There is only one instance of this build job across all HCW accounts, with deployments in all environments pulling
+# the resulting zip file from S3 for their deployments.
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - python --version
+      - pip --version
+      - pip install pipx
+      - python -m pipx install poetry
+      - python -m pipx ensurepath
+      - source ~/.bashrc
+  build:
+    commands:
+      - make build
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: package
+  name: hcw-api-app

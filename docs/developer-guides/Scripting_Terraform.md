@@ -114,7 +114,7 @@ service-repository/
    │  │  ├─ backend.tf
    │  │  ├─ main.tf
    │  │  ├─ provider.tf
-   │  │  └─ terraform.tfvars
+   │  │  └─ dev.tfvars
    │  ├─ nonprod/
    |  │  ├─ ...
    │  └─ prod/

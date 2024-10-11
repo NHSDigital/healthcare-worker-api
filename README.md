@@ -1,112 +1,106 @@
-# Repository Template
+# Healthcare Worker API
 
-[![CI/CD Pull Request](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml/badge.svg)](https://github.com/nhs-england-tools/repository-template/actions/workflows/cicd-1-pull-request.yaml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=repository-template&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=repository-template)
-
-Start with an overview or a brief description of what the project is about and what it does. For example -
-
-Welcome to our repository template designed to streamline your project setup! This robust template provides a reliable starting point for your new projects, covering an essential tech stack and encouraging best practices in documenting.
-
-This repository template aims to foster a user-friendly development environment by ensuring that every included file is concise and adequately self-documented. By adhering to this standard, we can promote increased clarity and maintainability throughout your project's lifecycle. Bundled within this template are resources that pave the way for seamless repository creation. Currently supported technologies are:
-
-- Terraform
-- Docker
-
-Make use of this repository template to expedite your project setup and enhance your productivity right from the get-go. Enjoy the advantage of having a well-structured, self-documented project that reduces overhead and increases focus on what truly matters - coding!
-
-## Table of Contents
-
-- [Repository Template](#repository-template)
-  - [Table of Contents](#table-of-contents)
-  - [Setup](#setup)
-    - [Prerequisites](#prerequisites)
-    - [Configuration](#configuration)
-  - [Usage](#usage)
-    - [Testing](#testing)
-  - [Design](#design)
-    - [Diagrams](#diagrams)
-    - [Modularity](#modularity)
-  - [Contributing](#contributing)
-  - [Contacts](#contacts)
-  - [Licence](#licence)
+The Healthcare Worker API is a Python app deployed to AWS.
 
 ## Setup
 
-By including preferably a one-liner or if necessary a set of clear CLI instructions we improve user experience. This should be a frictionless installation process that works on various operating systems (macOS, Linux, Windows WSL) and handles all the dependencies.
+Before performing any local development we need to perform some basic setup tasks.
 
-Clone the repository
+### Python
 
-```shell
-git clone https://github.com/nhs-england-tools/repository-template.git
-cd nhs-england-tools/repository-template
-```
+This is a Python API with dependencies pulled in using poetry. In order to run locally you must have [Python](https://www.python.org/downloads/)
+and [poetry](https://python-poetry.org/docs/) installed.
 
-### Prerequisites
+PyCharm is the recommended IDE for this project. When setting up for the first time we need to configure the Python
+interpreter, which will also set up a virtual environment for our dependency installs. To set this up:
 
-The following software packages, or their equivalents, are expected to be installed and configured:
+1. Open one of the Python files (under `src`) in PyCharm
+2. Click the "Configure Python Interpreter" link in the top of the window
+3. Select "Add New Interpreter" -> "Add Local Interpreter"
+4. Leave the directory as the default (should be `venv` within the root of the project)
+5. Ensure that the Python version is set to at Python 3.12
+6. Check that the `venv` directory has been created and that the missing interpreter warning no longer displays
 
-- [Docker](https://www.docker.com/) container runtime or a compatible tool, e.g. [Podman](https://podman.io/),
-- [asdf](https://asdf-vm.com/) version manager,
-- [GNU make](https://www.gnu.org/software/make/) 3.82 or later,
-- [GNU coreutils](https://www.gnu.org/software/coreutils/) and [GNU binutils](https://www.gnu.org/software/binutils/) may be required to build dependencies like Python, which may need to be compiled during installation. For macOS users, this has been scripted and automated by the `dotfiles` project; please see this [script](https://github.com/nhs-england-tools/dotfiles/blob/main/assets/20-install-base-packages.macos.sh) for details,
-- [Python](https://www.python.org/) required to run Git hooks,
-- [`jq`](https://jqlang.github.io/jq/) a lightweight and flexible command-line JSON processor.
+If you want to install/run from a terminal you will need to activate the venv in that terminal. The command for this
+varies slightly based on OS.
 
-> [!NOTE]<br>
-> The version of GNU make available by default on macOS is earlier than 3.82. You will need to upgrade it or certain `make` tasks will fail. On macOS, you will need [Homebrew](https://brew.sh/) installed, then to install `make`, like so:
->
-> ```shell
-> brew install make
-> ```
->
-> You will then see instructions to fix your `$PATH` variable to make the newly installed version available. If you are using [dotfiles](https://github.com/nhs-england-tools/dotfiles), this is all done for you.
+MacOS: `source venv/bin/activate`
+Windows: `.\venv\Scripts\activate.bat`
 
-### Configuration
+Once you've switched to the venv you can install dependencies with `poetry install`.
 
-Installation and configuration of the toolchain dependencies
+We can run the application locally with the command `poetry run start`
 
-```shell
-make config
-```
+If you need to manually deploy your local app to an environment then you need to build it first. Run the `./scripts/build-app.sh` script
+from the root directory to generate the zip file that needs to be uploaded. Then run `./scripts/deploy-app.sh` to publish to app
+to the S3 artifact bucket.
 
-## Usage
+### Terraform
 
-After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
+The `infrastructure` directory contains everything needed to define an HCW AWS environment. Generally these changes should
+be deployed out through our GitHub pipelines, but sometimes you may need to test / build / deploy locally. This section
+guides through how to do that.
 
-### Testing
+1. Install the [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) if you haven't already
+2. Install the [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) if you haven't already
+3. Save your AWS credentials
+   1. Go to the [AWS account list](https://d-9c67018f89.awsapps.com/start/#/?tab=accounts) page in a browser
+   2. Select the environment you want to deploy to
+   3. Click on the "Access Keys" link
+   4. Copy the environment variables and paste into your terminal. This should have set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`.
+4. Go to the `instrastructure` directory
+5. Run `terraform init`. You should see a message including the message "Terraform has been successfully initialized!"
+6. Each AWS account can host multiple application environments (e.g. multiple dev environments in the dev account), but there are also some things that need to be common across the entire environment (e.g. IAM roles). To manage this we have different Terraform workspaces. Any Terraform plan / apply should be run within a workspace and the choice of workspace will depend on the change you want to deploy:
+   1. `mgmt` for anything that's common across all environments. Note that this change will affect all environments in the given account
+   2. Static environment names like (e.g. `ft`, `int`) should be reserved for deployment from the pipelines
+   3. Anything else can be used to deploy a test environment. If running locally it's a good idea to have the workspace name include your name in some way.
+7. Switch to the Terraform workspace you want with `terraform workspace select <workspace>`
+   1. If this is the first deployment to this workspace then you will need to run `terraform workspace new <workspace>` first
+8. Run `terraform plan -var-file=environments/dev.tfvars` to validate your changes and see what impact it will have if deployed
+   1. This is important. **Make sure the plan represents the change you want to make before running the apply command**
+9. If you're happy with the above plan, run `terraform apply -var-file=environments/dev.tfvars` to make the change in AWS
+   1. If you're deploying to an app environment (i.e. not management) then you'll also need to specify location of the S3 lambda code in S3. For example, `-var "app_s3_filename=66374856c6c908c50e5d0974704b0e727106a934.zip"`. Since you need a valid zip file before deployments, it's almost always easier to let the update happen automatically through the PR.
 
-There are `make` tasks for you to configure to run your tests.  Run `make test` to see how they work.  You should be able to use the same entry points for local development as in your CI pipeline.
+In the future we plan to put the "management" resources into their own AWS account - [HCW-100](https://nhsd-jira.digital.nhs.uk/browse/HCW-100). For now, we have the `mgmt` workspace in dev which contains all the global resources and `mgmt-int` in int which contains build resources shared by int & ref.
 
-## Design
+A Terraform linter runs on each push to a PR, the command `terraform fmt -recursive` will resolve any simple formatting issues for fix that status failure.
 
-### Diagrams
+## Environments & Pipelines
 
-The [C4 model](https://c4model.com/) is a simple and intuitive way to create software architecture diagrams that are clear, consistent, scalable and most importantly collaborative. This should result in documenting all the system interfaces, external dependencies and integration points.
+We have a number of dev environments and static environments for more formal testing. The following is our current environments, along with their AWS account and their general purpose:
 
-![Repository Template](./docs/diagrams/Repository_Template_GitHub_Generic.png)
+* Dev environments - dev - created automatically with each PR
+* FT - dev - created automatically from the latest code on the develop branch
+* Sand - int - for supplier testing with minimal barriers, designed to return a representative response but not a true integration
+* Int - int - for integration testing with suppliers
+* Ref - int - for formal release testing before deploying to production
+* Prod - prod - production environment
 
-### Modularity
+### Development process
 
-Most of the projects are built with customisability and extendability in mind. At a minimum, this can be achieved by implementing service level configuration options and settings. The intention of this section is to show how this can be used. If the system processes data, you could mention here for example how the input is prepared for testing - anonymised, synthetic or live data.
+#### PRs
 
-## Contributing
+**All commits need to be [signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits)** else the PR will be automatically rejected.
 
-Describe or link templates on how to raise an issue, feature request or make a contribution to the codebase. Reference the other documentation files, like
+All work should be performed against a ticket in the HCW jira project. The changes should be made on a branch specific to that ticket.
+We don't have any formal branch naming conventions, but as a minimum the ticket number must be on the branch.
+There is no restriction of commit names on the branch, but all PRs must be squashed when merging.
+The squashed commit message should start with the jira ticket number and include a brief description of the change, (e.g. "HCW-76: Deployment Pipeline").
 
-- Environment setup for contribution, i.e. `CONTRIBUTING.md`
-- Coding standards, branching, linting, practices for development and testing
-- Release process, versioning, changelog
-- Backlog, board, roadmap, ways of working
-- High-level requirements, guiding principles, decision records, etc.
+Creating a PR will automatically trigger a few different processes. The PR itself shows the status of a number of checks performed on the code.
+This includes things like linting, Terraform format checks and spelling checker. It also automatically triggers the
+deployment of the dev environment based on the PR. Note that there is currently no indication of the state of the deployment on the PR (see [HCW-101](https://nhsd-jira.digital.nhs.uk/browse/HCW-101)).
 
-## Contacts
+You can check on the status of your build and deployment through the AWS console in the dev account (note that this may change to the management account under [HCW-100](https://nhsd-jira.digital.nhs.uk/browse/HCW-100)).
+The hcw-api-deployment pipeline will trigger within a minute of the PR creation (or new commit to an existing PR). The history page shows current and previous runs - see [AWS pipeline execution history page](https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/hcw-api-deployment/executions) (you can use the "Source revisions" column to make sure you've found your build)
 
-Provide a way to contact the owners of this project. It can be a team, an individual or information on the means of getting in touch via active communication channels, e.g. opening a GitHub discussion, raising an issue, etc.
+Each pipeline starts with the "build" which performs a poetry build to generate the files that will deployed to the lambda. The S3-Upload action then zips and uploads the files to S3, this ensures that future deployments will be deploying exactly the same code.
+The "Deploy" action performs any relevant infrastructure changes, including updating the application lambda to the latest code. The dev environment is up to date once this step completes.
 
-## Licence
+*Note that not all of the Terraform in the repository is applied at this stage. There are some resources which are common between environments, they are only updated once the PR is merged into develop. See above Terraform section for more information.*
 
-> The [LICENCE.md](./LICENCE.md) file will need to be updated with the correct year and owner
+#### Post Merge Process
 
-Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
-
-Any HTML or Markdown documentation is [© Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/) and available under the terms of the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+The same pipeline (hcw-api-deployment) is triggered for merges to develop, but it deploys to "FT" instead of a PR dev environment. Once the deployment is complete it also triggers the "hcw-api-static-env-deployment" job.
+The main difference is that this pipeline requires approval before every deployment, ensuring that we don't update a higher environment accidentally.
+The deployments happen in other environments, so you'll need to log into the int or prod AWS accounts to see their logs, but the pipeline will show if the job ran successfully or not.

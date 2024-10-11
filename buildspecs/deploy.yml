@@ -1,0 +1,35 @@
+# This is triggered as part of the codepipeline pipelines to deploy a specific build to an environment. It takes in
+# the environment name and the s3 filename of the build zip for the lambda.
+# There is one instance of this job in every HCW AWS account, with it responsible for making changes any infrastructure
+# changes as required.
+version: 0.2
+
+env:
+  variables:
+    environment_name: ""
+    account_name: ""
+    app_s3_filename: ""
+
+phases:
+  install:
+    commands:
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum -y install terraform
+      - terraform --version
+  build:
+    commands:
+      - cd infrastructure
+      - terraform init
+      - terraform workspace select -or-create ${environment_name}
+      - terraform plan -var-file="environments/${account_name}.tfvars" -var "app_s3_filename=${app_s3_filename}" -out tf.plan
+      - terraform apply tf.plan
+      - |
+        if expr "${environment_name}" : "ft" >/dev/null; then
+          # Since we're deploying to ft we want to make sure we deploy the mgmt infra too (we don't do this on
+          # every branch otherwise it'll conflict)
+          terraform workspace select mgmt
+          terraform plan -var-file="environments/${account_name}.tfvars" -var "app_s3_filename=${app_s3_filename}" -out tf.plan
+          terraform apply tf.plan
+        fi
+
