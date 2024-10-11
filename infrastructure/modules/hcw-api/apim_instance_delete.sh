@@ -30,5 +30,5 @@ proxygen credentials set private_key_path /tmp/proxygen_private_key.pem key_id k
 echo "Set service credentials"
 
 # Deploy proxygen instance
-echo proxygen instance delete "$apim_environment" "healthcare-worker${env_name_suffix}"
-proxygen instance delete "$apim_environment" "healthcare-worker${env_name_suffix}"
+echo proxygen instance delete --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}"
+proxygen instance delete --no-confirm "$apim_environment" "healthcare-worker${env_name_suffix}"
