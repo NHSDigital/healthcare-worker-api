@@ -91,7 +91,8 @@ The squashed commit message should start with the jira ticket number and include
 
 Creating a PR will automatically trigger a few different processes. The PR itself shows the status of a number of checks performed on the code.
 This includes things like linting, Terraform format checks and spelling checker. It also automatically triggers the
-deployment of the dev environment based on the PR. Note that there is currently no indication of the state of the deployment on the PR (see [HCW-101](https://nhsd-jira.digital.nhs.uk/browse/HCW-101)).
+deployment of the dev environment based on the PR. This shows on the PR as the "HCW Deployment" status check which appears on each commit shortly after being pushed.
+It will be marked as "pending" until there's either an error on the pipeline or the integration tests successfully complete with all tests passing.
 
 You can check on the status of your build and deployment through the AWS console in the dev account (note that this may change to the management account under [HCW-100](https://nhsd-jira.digital.nhs.uk/browse/HCW-100)).
 The hcw-api-deployment pipeline will trigger within a minute of the PR creation (or new commit to an existing PR). The history page shows current and previous runs - see [AWS pipeline execution history page](https://eu-west-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/hcw-api-deployment/executions) (you can use the "Source revisions" column to make sure you've found your build)
