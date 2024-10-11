@@ -1,1 +1,2 @@
-account = "dev"
+account          = "dev"
+apim_environment = "internal-dev"

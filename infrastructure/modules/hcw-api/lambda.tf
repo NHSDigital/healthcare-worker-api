@@ -9,7 +9,7 @@ data "aws_s3_object" "app_deployment_zip" {
 
 resource "aws_lambda_function" "hcw-app" {
   function_name = "hcw-app-${var.env}"
-  role          = aws_iam_role.lambda-app-role.arn
+  role          = aws_iam_role.lambda_app_role.arn
 
   runtime = "python3.12"
 
@@ -22,8 +22,8 @@ resource "aws_lambda_function" "hcw-app" {
   publish = true
 }
 
-resource "aws_iam_role" "lambda-app-role" {
-  name = "lambda_app_role-${var.env}"
+resource "aws_iam_role" "lambda_app_role" {
+  name = "lambda-app-role-${var.env}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -34,9 +34,44 @@ resource "aws_iam_role" "lambda-app-role" {
         Principal = {
           Service = "lambda.amazonaws.com"
         }
-      },
+      }
     ]
   })
+}
+
+resource "aws_iam_policy" "lambda_app_policy" {
+  name = "lambda-app-policy-${var.env}"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances",
+          "ec2:CreateNetworkInterface",
+          "ec2:AttachNetworkInterface",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DeleteNetworkInterface"
+        ]
+        Resource = "*"
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        "Resource" : "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_app_role_attach" {
+  role       = aws_iam_role.lambda_app_role.name
+  policy_arn = aws_iam_policy.lambda_app_policy.arn
 }
 
 resource "aws_lambda_alias" "live" {

@@ -104,9 +104,25 @@ info:
     name: Spine Directory Service API Support
     url: https://digital.nhs.uk/developer/help-and-support
     email: api.management@nhs.net
+security:
+  - app-level3: []
 servers:
   - url: TBC sandbox URL
     description: Sandbox environment
+x-nhsd-apim:
+  monitoring: true
+  access:
+    - title: "Application Restricted"
+      grants:
+        app-level3: []
+  target:
+    type: external
+    healthcheck: /
+    url:
+    security:
+      type: apikey
+      header: X-API-Key
+      secret: example-apikey-secret-name
 paths:
   /Worker:
     get:
@@ -175,6 +191,9 @@ paths:
         '504':
           description: Upstream server request has timed out
 components:
+  securitySchemes:
+    app-level3:
+      $ref: https://proxygen.prod.api.platform.nhs.uk/components/securitySchemes/app-level3
   schemas:
     Worker:
       type: object
