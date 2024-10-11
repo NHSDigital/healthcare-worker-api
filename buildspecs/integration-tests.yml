@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  shell: bash
+  variables:
+    branch: ""
+    apim_private_key_secret_arn: ""
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - pip install proxygen-cli
+      - pip install pipx
+      - python -m pipx install poetry
+      - python -m pipx ensurepath
+      - source ~/.bashrc
+  build:
+    commands:
+      - |
+        echo "Setting up for integration tests"
+        source ./infrastructure/modules/hcw-api/proxygen-setup.sh "$apim_private_key_secret_arn"
+        if [[ "${branch}" == "ft" ]]; then
+          env_suffix=""
+        else
+          env_suffix="_${branch}"
+        fi
+
+        access_token=$(proxygen pytest-nhsd-apim get-token | jq -r ".pytest_nhsd_apim_token")
+        app_details=$(curl --location "https://api.enterprise.apigee.com/v1/organizations/nhsd-nonprod/developers/ian.robinson27@nhs.net/apps/healthcare-worker${env_suffix}" \
+          --header "Authorization: Bearer ${access_token}" \
+          --header 'Content-Type: application/json')
+        env_app_client_id=$(echo "$app_details" | jq -r ".credentials[0].consumerKey")
+        echo "client id = ${env_app_client_id}"
+
+        poetry install
+      - |
+        echo "Run integration tests"
+        cd integration_tests
+        TEST_ENV=${branch} TEST_CLIENT_ID=${env_app_client_id} poetry run pytest
